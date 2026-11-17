@@ -11,13 +11,34 @@ class AuthController extends Controller
     /**
      * Tampilkan formulir login admin.
      */
-    public function showLoginForm()
+    public function showLoginForm(Request $request)
     {
         if (Auth::check()) {
             return redirect('/admin');
         }
 
-        return view('auth.login');
+        $errorKey = $request->query('error');
+        $loginAlerts = [
+            'password' => [
+                'title' => 'Kata sandi salah',
+                'text' => 'Email ditemukan, tetapi kata sandi yang dimasukkan tidak sesuai. Silakan coba lagi.',
+            ],
+            'akun' => [
+                'title' => 'Akun tidak ditemukan',
+                'text' => 'Email tersebut belum terdaftar sebagai pengelola.',
+            ],
+            'session' => [
+                'title' => 'Sesi berakhir',
+                'text' => 'Anda belum masuk atau sesi login hilang. Masukkan email dan kata sandi lagi.',
+            ],
+        ];
+
+        return view('auth.login', [
+            'loginAlert' => $loginAlerts[$errorKey] ?? null,
+            'loginEmail' => old('email', $request->query('email', 'staklim.merauke@gmail.com')),
+            'highlightPassword' => $errorKey === 'password',
+            'highlightEmail' => in_array($errorKey, ['password', 'akun'], true),
+        ]);
     }
 
     /**
