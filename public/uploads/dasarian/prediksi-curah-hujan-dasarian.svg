@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 724" width="1024" height="724">
+    <rect width="1024" height="724" fill="#ffffff"/>
+    <rect x="12" y="12" width="1000" height="700" fill="#ffffff" stroke="#334155" stroke-width="2"/>
+    
+    <g transform="translate(20, 20)">
+        <rect x="0" y="0" width="730" height="684" fill="#f0fdfa" stroke="#94a3b8" stroke-width="1.5"/>
+        
+        <line x1="0" y1="171" x2="730" y2="171" stroke="#ccfbf1" stroke-dasharray="3,3"/>
+        <line x1="0" y1="342" x2="730" y2="342" stroke="#ccfbf1" stroke-dasharray="3,3"/>
+        <line x1="0" y1="513" x2="730" y2="513" stroke="#ccfbf1" stroke-dasharray="3,3"/>
+        <line x1="243" y1="0" x2="243" y2="684" stroke="#ccfbf1" stroke-dasharray="3,3"/>
+        <line x1="486" y1="0" x2="486" y2="684" stroke="#ccfbf1" stroke-dasharray="3,3"/>
+
+        <!-- Coordinates -->
+        <text x="6" y="16" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="700" fill="#475569">136°00'E</text>
+        <text x="249" y="16" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="700" fill="#475569">138°00'E</text>
+        <text x="492" y="16" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="700" fill="#475569">140°00'E</text>
+        <text x="6" y="340" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="700" fill="#475569">6°00'S</text>
+        <text x="6" y="511" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="700" fill="#475569">8°00'S</text>
+
+        <!-- Polygons Papua Selatan: Forecast -->
+        <path d="M 120,70 L 220,50 L 330,120 L 290,220 L 170,230 L 90,160 Z" fill="#2dd4bf" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="190" y="140" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="900" fill="#134e4a">ASMAT</text>
+        <text x="190" y="158" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" fill="#115e59">100–150 mm</text>
+
+        <path d="M 330,120 L 530,90 L 610,230 L 480,310 L 290,220 Z" fill="#0d9488" stroke="#115e59" stroke-width="1.8"/>
+        <text x="430" y="200" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="900" fill="#ffffff">BOVEN DIGOEL</text>
+        <text x="430" y="218" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" fill="#ccfbf1">150–200 mm</text>
+
+        <path d="M 170,230 L 290,220 L 480,310 L 390,440 L 230,420 L 150,330 Z" fill="#5eead4" stroke="#0d9488" stroke-width="1.8"/>
+        <text x="290" y="320" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="900" fill="#134e4a">MAPPI</text>
+        <text x="290" y="338" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" fill="#0f766e">75–100 mm</text>
+
+        <path d="M 390,440 L 480,310 L 610,230 L 690,320 L 720,530 L 660,650 L 510,580 L 390,440 Z" fill="#99f6e4" stroke="#0d9488" stroke-width="1.8"/>
+        <text x="560" y="440" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="900" fill="#134e4a">MERAUKE</text>
+        <text x="560" y="460" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" fill="#0f766e">50–100 mm</text>
+
+        <!-- Compass & Scale -->
+        <g transform="translate(60, 560)">
+            <circle cx="28" cy="28" r="24" fill="#ffffff" stroke="#0f172a" stroke-width="1.5"/>
+            <polygon points="28,10 35,28 21,28" fill="#ef4444"/>
+            <polygon points="28,46 35,28 21,28" fill="#0f172a"/>
+            <text x="28" y="7" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="900" fill="#0f172a" text-anchor="middle">U</text>
+        </g>
+        <g transform="translate(130, 640)">
+            <rect x="0" y="0" width="200" height="8" fill="#ffffff" stroke="#0f172a" stroke-width="1"/>
+            <rect x="0" y="0" width="50" height="8" fill="#0f172a"/>
+            <rect x="100" y="0" width="50" height="8" fill="#0f172a"/>
+            <text x="0" y="-3" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="700" fill="#0f172a">0</text>
+            <text x="50" y="-3" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="700" fill="#0f172a">50</text>
+            <text x="100" y="-3" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="700" fill="#0f172a">100</text>
+            <text x="200" y="-3" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="700" fill="#0f172a">200 km</text>
+        </g>
+    </g>
+
+    <!-- Right Sidebar -->
+    <g transform="translate(760, 20)">
+        <rect x="0" y="0" width="244" height="150" fill="#ffffff" stroke="#334155" stroke-width="1.5"/>
+        <text x="122" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="800" fill="#0f172a" text-anchor="middle">PRAKIRAAN CURAH HUJAN</text>
+        <text x="122" y="38" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="800" fill="#0f172a" text-anchor="middle">DASARIAN II</text>
+        <text x="122" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="700" fill="#0d9488" text-anchor="middle">PROVINSI PAPUA SELATAN</text>
+        <text x="122" y="66" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="700" fill="#64748b" text-anchor="middle">BERLAKU: 11 — 20 NOVEMBER 2026</text>
+        
+        <circle cx="122" cy="98" r="18" fill="#f8fafc" stroke="#0d9488" stroke-width="1"/>
+        <text x="122" y="103" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="900" fill="#064e3b" text-anchor="middle">BMKG</text>
+        <text x="122" y="132" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" fill="#064e3b" text-anchor="middle">STASIUN KLIMATOLOGI PAPUA SELATAN</text>
+
+        <!-- Middle Box -->
+        <rect x="0" y="160" width="244" height="280" fill="#ffffff" stroke="#334155" stroke-width="1.5"/>
+        <text x="16" y="184" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="800" fill="#0f172a">Prediksi Deterministik:</text>
+        
+        <rect x="16" y="200" width="22" height="16" fill="#ccfbf1" stroke="#0d9488" stroke-width="1"/>
+        <text x="46" y="213" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="600" fill="#0f172a">0 – 50 mm (Rendah)</text>
+
+        <rect x="16" y="226" width="22" height="16" fill="#99f6e4" stroke="#0d9488" stroke-width="1"/>
+        <text x="46" y="239" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="600" fill="#0f172a">50 – 100 mm (Menengah)</text>
+
+        <rect x="16" y="252" width="22" height="16" fill="#2dd4bf" stroke="#0f766e" stroke-width="1"/>
+        <text x="46" y="265" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="600" fill="#0f172a">100 – 150 mm (Menengah)</text>
+
+        <rect x="16" y="278" width="22" height="16" fill="#0d9488" stroke="#115e59" stroke-width="1"/>
+        <text x="46" y="291" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="600" fill="#0f172a">150 – 200 mm (Tinggi)</text>
+
+        <rect x="16" y="304" width="22" height="16" fill="#042f2e" stroke="#022c22" stroke-width="1"/>
+        <text x="46" y="317" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="600" fill="#0f172a">&gt; 200 mm (Sangat Tinggi)</text>
+
+        <text x="16" y="352" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="800" fill="#0f172a">Keterangan Batas:</text>
+        <rect x="16" y="364" width="22" height="14" fill="none" stroke="#475569" stroke-width="1.5"/>
+        <text x="46" y="375" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="600" fill="#0f172a">Batas Distrik / Kab</text>
+
+        <!-- Bottom Box -->
+        <rect x="0" y="450" width="244" height="234" fill="#ffffff" stroke="#334155" stroke-width="1.5"/>
+        <text x="16" y="475" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="800" fill="#0f172a">Sumber Data:</text>
+        <text x="16" y="500" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="500" fill="#334155">1. Model ECMWF IFS &amp; BMKG</text>
+        <text x="16" y="518" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="500" fill="#334155">2. Peta Rupa Bumi Indonesia (BIG)</text>
+        <text x="16" y="536" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="500" fill="#334155">3. Ensambel Dinamik BMKG</text>
+
+        <text x="16" y="640" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="700" fill="#0d9488">Staklim Papua Selatan - Merauke</text>
+        <text x="16" y="655" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" font-weight="500" fill="#94a3b8">Update Resmi: 11 November 2026</text>
+    </g>
+</svg>
