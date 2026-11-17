@@ -13,7 +13,8 @@ class AuthController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return redirect()->route('admin');
+            $isHttps = request()->isSecure() || request()->header('X-Forwarded-Proto') === 'https' || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
+            return redirect()->to('/admin', 302, [], $isHttps ? true : null);
         }
 
         return view('auth.login');
@@ -38,7 +39,9 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('admin'))->with('status', 'Selamat datang kembali di Panel Pengelola Data.');
+            $isHttps = $request->isSecure() || $request->header('X-Forwarded-Proto') === 'https' || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
+
+            return redirect()->to('/admin', 302, [], $isHttps ? true : null)->with('status', 'Selamat datang kembali di Panel Pengelola Data.');
         }
 
         return back()->withInput($request->only('email', 'remember'))->withErrors([

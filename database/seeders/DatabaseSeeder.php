@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'Buletin Informasi Iklim Provinsi Papua Selatan',
                 'release_date' => '2026-11-15',
-                'description' => 'Publikasi resmi bulanan Stasiun Klimatologi Papua Selatan memuat analisis dinamika atmosfer (ENSO, IOD, MJO), evaluasi curah hujan dasarian dan bulanan Oktober 2026, monitoring hari tanpa hujan (HTH), prakiraan curah hujan dan sifat hujan 3 bulan ke depan (Desember 2026 – Februari 2027), serta rekomendasi iklim untuk sektor pertanian di Kabupaten Merauke, Boven Digoel, Mappi, dan Asmat.',
+                'description' => 'Publikasi resmi bulanan Stasiun Klimatologi Papua Selatan memuat analisis dinamika atmosfer (ENSO, IOD, MJO), evaluasi curah hujan dasarian dan bulanan Oktober 2026, monitoring hari tanpa hujan (HTH), prakiraan curah hujan dan sifat hujan 3 bulan ke depan (Desember 2026 - Februari 2027), serta rekomendasi iklim untuk sektor pertanian di Kabupaten Merauke, Boven Digoel, Mappi, dan Asmat.',
                 'cover_image' => 'images/default-bulletin-cover.svg',
                 'file_path' => null,
                 'external_link' => 'https://staklim-papuaselatan.bmkg.go.id/storage/buletin-iklim-nov-2026.pdf',

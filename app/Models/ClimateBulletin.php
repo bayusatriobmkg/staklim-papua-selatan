@@ -34,7 +34,7 @@ class ClimateBulletin extends Model
     public function getFormattedDateAttribute(): string
     {
         if (!$this->release_date) {
-            return '—';
+            return '-';
         }
 
         return Carbon::parse($this->release_date)->locale('id')->isoFormat('D MMMM Y');
