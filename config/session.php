@@ -16,7 +16,9 @@ return [
     |
     */
 
-    'driver' => 'cookie',
+    // Keep web sessions independent from the application database so a
+    // database outage does not prevent the login form and CSRF token loading.
+    'driver' => 'file',
 
     /*
     |--------------------------------------------------------------------------
