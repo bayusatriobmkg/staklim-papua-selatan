@@ -3,48 +3,52 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    /**
-     * Tampilkan formulir login admin.
-     */
-    public function showLoginForm(Request $request)
+    private const ALERTS = [
+        'password' => [
+            'title' => 'Kata sandi salah',
+            'text' => 'Email ditemukan, tetapi kata sandi yang dimasukkan tidak sesuai.',
+        ],
+        'akun' => [
+            'title' => 'Akun tidak ditemukan',
+            'text' => 'Email tersebut belum terdaftar sebagai pengelola.',
+        ],
+        'session' => [
+            'title' => 'Sesi berakhir',
+            'text' => 'Anda belum masuk atau sesi login hilang. Silakan masuk lagi.',
+        ],
+        'csrf' => [
+            'title' => 'Form kedaluwarsa',
+            'text' => 'Halaman login sudah kedaluwarsa. Isi kata sandi lalu kirim ulang.',
+        ],
+    ];
+
+    public function showLoginForm(Request $request): View|RedirectResponse
     {
         if (Auth::check()) {
             return redirect('/admin');
         }
 
-        $errorKey = $request->query('error');
-        $loginAlerts = [
-            'password' => [
-                'title' => 'Kata sandi salah',
-                'text' => 'Email ditemukan, tetapi kata sandi yang dimasukkan tidak sesuai. Silakan coba lagi.',
-            ],
-            'akun' => [
-                'title' => 'Akun tidak ditemukan',
-                'text' => 'Email tersebut belum terdaftar sebagai pengelola.',
-            ],
-            'session' => [
-                'title' => 'Sesi berakhir',
-                'text' => 'Anda belum masuk atau sesi login hilang. Masukkan email dan kata sandi lagi.',
-            ],
-        ];
+        $errorKey = (string) $request->query('error', '');
+        $highlightPassword = $errorKey === 'password';
 
         return view('auth.login', [
-            'loginAlert' => $loginAlerts[$errorKey] ?? null,
-            'loginEmail' => old('email', $request->query('email', 'staklim.merauke@gmail.com')),
-            'highlightPassword' => $errorKey === 'password',
-            'highlightEmail' => in_array($errorKey, ['password', 'akun'], true),
+            'loginAlert' => self::ALERTS[$errorKey] ?? null,
+            'emailValue' => old('email', $request->query('email', 'staklim.merauke@gmail.com')),
+            'emailClass' => 'form-input'.(in_array($errorKey, ['password', 'akun'], true) ? ' is-invalid' : ''),
+            'passwordClass' => 'form-input'.($highlightPassword ? ' is-invalid' : ''),
+            'emailAutofocus' => ! $highlightPassword,
+            'passwordAutofocus' => $highlightPassword,
         ]);
     }
 
-    /**
-     * Proses otentikasi login admin.
-     */
-    public function login(Request $request)
+    public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -55,37 +59,28 @@ class AuthController extends Controller
             'password.required' => 'Kata sandi wajib diisi.',
         ]);
 
-        $remember = $request->boolean('remember');
+        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+            $error = User::where('email', $credentials['email'])->exists()
+                ? 'password'
+                : 'akun';
 
-        if (Auth::attempt($credentials, $remember)) {
-            $request->session()->regenerate();
-
-            return redirect('/admin')->with('status', 'Selamat datang kembali di Panel Pengelola Data.');
+            return redirect('/login?'.http_build_query([
+                'error' => $error,
+                'email' => $credentials['email'],
+            ]));
         }
 
-        $error = User::where('email', $credentials['email'])->exists()
-            ? 'password'
-            : 'akun';
+        $request->session()->regenerate();
 
-        return redirect('/login?error='.$error.'&email='.urlencode($credentials['email']))
-            ->withInput($request->only('email', 'remember'))
-            ->withErrors([
-                'email' => $error === 'password'
-                    ? 'Kata sandi yang Anda masukkan salah.'
-                    : 'Akun dengan email tersebut tidak ditemukan.',
-            ]);
+        return redirect('/admin');
     }
 
-    /**
-     * Proses logout admin.
-     */
-    public function logout(Request $request)
+    public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('status', 'Anda telah berhasil keluar dari sesi admin.');
+        return redirect('/login');
     }
 }

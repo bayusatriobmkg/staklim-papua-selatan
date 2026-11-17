@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Str;
-
 return [
 
     /*
@@ -18,7 +16,7 @@ return [
     |
     */
 
-    'driver' => env('SESSION_DRIVER', 'file'),
+    'driver' => 'cookie',
 
     /*
     |--------------------------------------------------------------------------
@@ -127,10 +125,7 @@ return [
     |
     */
 
-    'cookie' => env(
-        'SESSION_COOKIE',
-        Str::slug((string) env('APP_NAME', 'laravel')).'-session'
-    ),
+    'cookie' => env('SESSION_COOKIE', 'staklim_session'),
 
     /*
     |--------------------------------------------------------------------------
@@ -156,7 +151,7 @@ return [
     |
     */
 
-    'domain' => (($domain = env('SESSION_DOMAIN')) === 'null' || $domain === '') ? null : $domain,
+    'domain' => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -169,7 +164,7 @@ return [
     |
     */
 
-    'secure' => filter_var(env('SESSION_SECURE_COOKIE', false), FILTER_VALIDATE_BOOLEAN),
+    'secure' => false,
 
     /*
     |--------------------------------------------------------------------------

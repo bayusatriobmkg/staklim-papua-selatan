@@ -359,7 +359,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('login', [], false) }}" autocomplete="on">
+            <form method="POST" action="/login" autocomplete="on">
                 @csrf
 
                 <div class="form-group">
@@ -368,7 +368,7 @@
                         <span class="input-icon">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                         </span>
-                        <input id="email" type="email" name="email" class="form-input {{ !empty($highlightEmail) || $errors->has('email') ? 'is-invalid' : '' }}" value="{{ $loginEmail ?? old('email', 'staklim.merauke@gmail.com') }}" required @if(empty($highlightPassword)) autofocus @endif placeholder="staklim.merauke@gmail.com">
+                        <input id="email" type="email" name="email" class="{{ $emailClass ?? 'form-input' }}" value="{{ $emailValue ?? old('email', 'staklim.merauke@gmail.com') }}" required @if(!empty($emailAutofocus)) autofocus @endif placeholder="staklim.merauke@gmail.com">
                     </div>
                 </div>
 
@@ -378,7 +378,7 @@
                         <span class="input-icon">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                         </span>
-                        <input id="password" type="password" name="password" class="form-input {{ !empty($highlightPassword) || $errors->has('password') ? 'is-invalid' : '' }}" required placeholder="Masukkan kata sandi" @if(!empty($highlightPassword)) autofocus @endif>
+                        <input id="password" type="password" name="password" class="{{ $passwordClass ?? 'form-input' }}" required placeholder="Masukkan kata sandi" @if(!empty($passwordAutofocus)) autofocus @endif>
                         <button type="button" class="btn-toggle-pwd" id="togglePassword" aria-label="Tampilkan / Sembunyikan Kata Sandi">
                             <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                         </button>
@@ -397,7 +397,7 @@
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </button>
 
-                <a href="{{ route('dashboard') }}" class="back-link">
+                <a href="/" class="back-link">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
                     Kembali ke Portal Publik
                 </a>
