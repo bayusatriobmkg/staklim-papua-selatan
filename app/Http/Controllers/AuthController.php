@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,9 +42,17 @@ class AuthController extends Controller
             return redirect('/admin')->with('status', 'Selamat datang kembali di Panel Pengelola Data.');
         }
 
-        return back()->withInput($request->only('email', 'remember'))->withErrors([
-            'email' => 'Email atau kata sandi yang dimasukkan tidak sesuai.',
-        ]);
+        $error = User::where('email', $credentials['email'])->exists()
+            ? 'password'
+            : 'akun';
+
+        return redirect('/login?error='.$error.'&email='.urlencode($credentials['email']))
+            ->withInput($request->only('email', 'remember'))
+            ->withErrors([
+                'email' => $error === 'password'
+                    ? 'Kata sandi yang Anda masukkan salah.'
+                    : 'Akun dengan email tersebut tidak ditemukan.',
+            ]);
     }
 
     /**

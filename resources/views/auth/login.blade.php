@@ -147,6 +147,19 @@
             color: #991b1b;
             border: 1px solid #fecaca;
         }
+        .alert-error strong {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+        .alert-error span {
+            font-weight: 500;
+            color: #b91c1c;
+        }
+        .form-input.is-invalid {
+            border-color: #ef4444 !important;
+            background: #fff7f7;
+        }
         .alert-success {
             background: #f0fdf4;
             color: #166534;
@@ -330,13 +343,26 @@
                 </div>
             @endif
 
-            @if($errors->any())
-                <div class="alert alert-error">
+            @php
+                $loginError = request('error');
+                $loginErrorMessages = [
+                    'password' => ['title' => 'Kata sandi salah', 'text' => 'Email ditemukan, tetapi kata sandi yang dimasukkan tidak sesuai. Silakan coba lagi.'],
+                    'akun' => ['title' => 'Akun tidak ditemukan', 'text' => 'Email tersebut belum terdaftar sebagai pengelola. Hubungi admin sistem.'],
+                    'session' => ['title' => 'Sesi berakhir', 'text' => 'Anda belum masuk atau sesi login hilang. Masukkan email dan kata sandi lagi.'],
+                ];
+            @endphp
+            @if($errors->any() || isset($loginErrorMessages[$loginError]))
+                <div class="alert alert-error" role="alert">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                     <div>
-                        @foreach ($errors->all() as $error)
-                            <div>{{ $error }}</div>
-                        @endforeach
+                        @if(isset($loginErrorMessages[$loginError]))
+                            <strong>{{ $loginErrorMessages[$loginError]['title'] }}</strong>
+                            <span>{{ $loginErrorMessages[$loginError]['text'] }}</span>
+                        @else
+                            @foreach ($errors->all() as $error)
+                                <div>{{ $error }}</div>
+                            @endforeach
+                        @endif
                     </div>
                 </div>
             @endif
@@ -350,7 +376,7 @@
                         <span class="input-icon">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                         </span>
-                        <input id="email" type="email" name="email" class="form-input" value="{{ old('email', 'staklim.merauke@gmail.com') }}" required autofocus placeholder="staklim.merauke@gmail.com">
+                        <input id="email" type="email" name="email" class="form-input {{ in_array(request('error'), ['password', 'akun'], true) || $errors->has('email') ? 'is-invalid' : '' }}" value="{{ old('email', request('email', 'staklim.merauke@gmail.com')) }}" required @if(request('error') !== 'password') autofocus @endif placeholder="staklim.merauke@gmail.com">
                     </div>
                 </div>
 
@@ -360,7 +386,7 @@
                         <span class="input-icon">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                         </span>
-                        <input id="password" type="password" name="password" class="form-input" required placeholder="Masukkan kata sandi">
+                        <input id="password" type="password" name="password" class="form-input {{ request('error') === 'password' || $errors->has('password') ? 'is-invalid' : '' }}" required placeholder="Masukkan kata sandi" @if(request('error') === 'password') autofocus @endif
                         <button type="button" class="btn-toggle-pwd" id="togglePassword" aria-label="Tampilkan / Sembunyikan Kata Sandi">
                             <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                         </button>
