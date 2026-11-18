@@ -4403,11 +4403,11 @@
         @php
         $total = $records->count(); $mean = $total ? $records->avg('incidence') : 0;
         $safeCount = $records->filter(fn($r) => $r->incidence < 3)->count();
-        $cautionCount = $records->filter(fn($r) => $r->incidence >= 3 && $r->incidence < 10)->count();
-        $alertCount = $records->filter(fn($r) => $r->incidence >= 10)->count();
-        $statusText = fn($value) => $value < 3 ? 'Aman' : ($value < 10 ? 'Waspada' : 'Awas');
-        $statusClass = fn($value) => $value < 3 ? 'safe' : ($value < 10 ? 'caution' : 'danger');
-        $statusColor = fn($value) => $value < 3 ? '#269467' : ($value < 10 ? '#e5ad24' : '#ce5142');
+        $cautionCount = $records->filter(fn($r) => $r->incidence >= 3 && $r->incidence <= 10)->count();
+        $alertCount = $records->filter(fn($r) => $r->incidence > 10)->count();
+        $statusText = fn($value) => $value < 3 ? 'Aman' : ($value <= 10 ? 'Waspada' : 'Awas');
+        $statusClass = fn($value) => $value < 3 ? 'safe' : ($value <= 10 ? 'caution' : 'danger');
+        $statusColor = fn($value) => $value < 3 ? '#269467' : ($value <= 10 ? '#e5ad24' : '#ce5142');
         $districts = ['Asmat','Boven Digoel','Mappi','Merauke'];
         $byName = $records->keyBy('district');
         $climateByName = $climateSuitabilities->keyBy('district');
@@ -4415,11 +4415,11 @@
 
         <section class="content-grid maps-grid">
             <article class="panel">
-                <div class="panel-heading"><div><h3>Prediksi Angka Insiden Malaria</h3><p>Angka insiden malaria per kabupaten · {{ $periodLabel }}</p></div><span class="badge safe">{{ $safeCount }} aman</span></div>
+                <div class="panel-heading"><div><h3>Prediksi Angka Insiden Malaria</h3><p>Angka insiden per 1.000 penduduk · {{ $periodLabel }}</p></div><span class="badge safe">{{ $safeCount }} aman</span></div>
                 <div class="map-shell">
                     <svg id="incidence-map" viewBox="0 0 520 500" role="img" aria-label="Peta batas administrasi kabupaten Papua Selatan"></svg>
                     <div id="map-popup" class="map-popup" role="status" aria-live="polite"><button type="button" class="map-popup-close" aria-label="Tutup informasi">×</button><div class="map-popup-title"></div><div class="map-popup-detail popup-period"></div><div class="map-popup-detail popup-incidence"></div><div class="map-popup-detail popup-status"></div></div>
-                    <div class="map-legend"><strong>Status peringatan dini</strong><div class="legend-row"><i class="swatch" style="background:#269467"></i>Aman · AI &lt; 3</div><div class="legend-row"><i class="swatch" style="background:#e5ad24"></i>Waspada · 3 ≤ AI &lt; 10</div><div class="legend-row"><i class="swatch" style="background:#ce5142"></i>Awas · AI ≥ 10</div></div>
+                    <div class="map-legend"><strong>Status peringatan dini · per 1.000 penduduk</strong><div class="legend-row"><i class="swatch" style="background:#269467"></i>Aman · AI &lt; 3</div><div class="legend-row"><i class="swatch" style="background:#e5ad24"></i>Waspada · 3 ≤ AI ≤ 10</div><div class="legend-row"><i class="swatch" style="background:#ce5142"></i>Awas · AI &gt; 10</div></div>
                     <div class="map-note">Batas kabupaten · BIG 2026</div>
                 </div>
             </article>
@@ -4441,10 +4441,10 @@
         </section>
 
         <section class="panel" style="margin-top:15px">
-            <article class="panel"><div class="panel-heading"><div><h3>Rekomendasi tindak lanjut</h3><p>Sesuaikan dengan pedoman dan kondisi setempat</p></div></div><div class="rec-card">
-            <div class="rec green"><h4>AMAN</h4><p>Angka insiden &lt; 3</p><ul><li>Penyelidikan epidemiologi</li><li>Penyuluhan dan PSN</li><li>Larvasidasi selektif</li></ul></div>
-            <div class="rec yellow"><h4>WASPADA</h4><p>Angka insiden 3–&lt;10</p><ul><li>Penyelidikan epidemiologi</li><li>Intensifikasi PSN</li><li>Larvasidasi selektif</li></ul></div>
-            <div class="rec red"><h4>AWAS</h4><p>Angka insiden ≥ 10</p><ul><li>Penyelidikan epidemiologi</li><li>Koordinasi respons cepat</li><li>Pengendalian vektor terarah</li></ul></div>
+            <article class="panel"><div class="panel-heading"><div><h3>Rekomendasi tindak lanjut</h3><p>Ambang angka insiden per 1.000 penduduk</p></div></div><div class="rec-card">
+            <div class="rec green"><h4>AMAN</h4><p><strong>Angka Insiden &lt; 3 per 1.000 penduduk.</strong> Risiko penularan rendah. Pencegahan rutin tetap dipertahankan.</p><ul><li>Surveilans rutin kasus malaria di fasilitas pelayanan kesehatan (FKTP).</li><li>Surveilans vektor rutin: kelambu, larva, dan nyamuk dewasa.</li><li>Edukasi pencegahan 3M Plus: Menguras, Menutup, Mengubur, memakai kelambu, repelen, dan pakaian tertutup.</li><li>Pantau rutin data kasus, vektor, dan faktor lingkungan.</li></ul></div>
+            <div class="rec yellow"><h4>WASPADA</h4><p><strong>Angka Insiden 3–10 per 1.000 penduduk.</strong> Risiko penularan sedang. Tingkatkan kewaspadaan dan pencegahan.</p><ul><li>Tingkatkan surveilans kasus malaria aktif dan pasif.</li><li>Tingkatkan surveilans vektor di lokasi risiko.</li><li>Lakukan larvasidasi selektif di tempat perindukan nyamuk.</li><li>Pastikan ketersediaan kelambu berinsektisida.</li><li>Edukasi dan komunikasi risiko kepada masyarakat.</li></ul></div>
+            <div class="rec red"><h4>AWAS</h4><p><strong>Angka Insiden &gt; 10 per 1.000 penduduk.</strong> Risiko penularan tinggi. Perlu respons cepat dan pengendalian intensif lintas sektor.</p><ul><li>Aktifkan respons cepat (RRT) malaria di tingkat kabupaten.</li><li>Lakukan surveilans kasus, vektor, dan lingkungan secara intensif dan harian.</li><li>Lakukan larvasidasi massal berkelanjutan di lokasi berisiko.</li><li>Lakukan IRS massal di seluruh wilayah berisiko tinggi.</li><li>Pastikan ketersediaan obat, RDT, dan logistik tanpa putus.</li><li>Mobilisasi lintas sektor dan komunikasi risiko intensif.</li></ul></div>
             </div></article>
         </section>
 
@@ -4519,15 +4519,15 @@
         Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, value));
         return element;
     };
-    const statusColor = value => value === null ? '#dce8e3' : value < 3 ? '#269467' : value < 10 ? '#e5ad24' : '#ce5142';
-    const statusText = value => value === null ? 'Belum ada data' : value < 3 ? 'Aman' : value < 10 ? 'Waspada' : 'Awas';
+    const statusColor = value => value === null ? '#dce8e3' : value < 3 ? '#269467' : value <= 10 ? '#e5ad24' : '#ce5142';
+    const statusText = value => value === null ? 'Belum ada data' : value < 3 ? 'Aman' : value <= 10 ? 'Waspada' : 'Awas';
     const showPopup = (district, value, event) => {
         popup.querySelector('.map-popup-title').textContent = district;
         popup.querySelector('.popup-period').textContent = 'Prediksi: {{ $periodLabel }}';
-        popup.querySelector('.popup-incidence').textContent = value === null ? 'Angka insiden: Belum ada data' : `Angka insiden: ${value.toFixed(2)} per 100.000 penduduk`;
+        popup.querySelector('.popup-incidence').textContent = value === null ? 'Angka insiden: Belum ada data' : `Angka insiden: ${value.toFixed(2)} per 1.000 penduduk`;
         const status = popup.querySelector('.popup-status');
         status.textContent = `Keterangan: ${statusText(value)}`;
-        status.style.color = value === null ? '#71828d' : value < 3 ? '#16734e' : value < 10 ? '#956400' : '#a83b30';
+        status.style.color = value === null ? '#71828d' : value < 3 ? '#16734e' : value <= 10 ? '#956400' : '#a83b30';
         popup.classList.add('is-visible');
         const bounds = mapShell.getBoundingClientRect();
         const popupWidth = popup.offsetWidth, popupHeight = popup.offsetHeight;

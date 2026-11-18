@@ -994,7 +994,7 @@
         </nav>
         <div id="malaria-ai-input">
         <h4>1. Angka Insiden Malaria</h4>
-        <p class="malaria-form-note">Masukkan angka insiden per 100.000 penduduk. Jika kabupaten dan periode yang sama sudah ada, nilainya akan diperbarui.</p>
+        <p class="malaria-form-note">Masukkan angka insiden per 1.000 penduduk. Jika kabupaten dan periode yang sama sudah ada, nilainya akan diperbarui.</p>
         <form method="post" novalidate action="{{ route('incidents.store', [], false) }}" class="form">
             @csrf
             <input type="hidden" name="period" value="{{ $period }}">
@@ -1008,12 +1008,12 @@
                 </select>
             </div>
             <div class="field">
-                <label for="incidence">Angka Insiden (AI) per 100.000 Penduduk</label>
+                <label for="incidence">Angka Insiden (AI) per 1.000 Penduduk</label>
                 <input id="incidence" name="incidence" type="number" min="0" max="100000" step="0.01" value="{{ old('incidence') }}" placeholder="Contoh: 4.25" required>
             </div>
             <button class="btn btn-blue" type="submit">Simpan Data AI</button>
         </form>
-        <p class="hint">Status Aman (&lt;3), Waspada (3–9.99), dan Awas (&ge;10) ditentukan otomatis sesuai standar epidemiologi Kemenkes &amp; BMKG.</p>
+        <p class="hint">Status dihitung otomatis: Aman &lt;3, Waspada 3–10, dan Awas &gt;10 per 1.000 penduduk.</p>
 
         <div class="table-wrap">
             <table class="table">
@@ -1027,8 +1027,8 @@
                 </thead>
                 <tbody>
                     @forelse($records as $record)
-                        @php($status = $record->incidence < 3 ? 'Aman' : ($record->incidence < 10 ? 'Waspada' : 'Awas'))
-                        @php($class = $record->incidence < 3 ? 'safe' : ($record->incidence < 10 ? 'caution' : 'danger'))
+                        @php($status = $record->incidence < 3 ? 'Aman' : ($record->incidence <= 10 ? 'Waspada' : 'Awas'))
+                        @php($class = $record->incidence < 3 ? 'safe' : ($record->incidence <= 10 ? 'caution' : 'danger'))
                         <tr>
                             <td data-label="Kabupaten"><strong>{{ $record->district }}</strong></td>
                             <td data-label="Angka insiden" class="value">{{ number_format($record->incidence, 2, ',', '.') }}</td>
@@ -1222,11 +1222,11 @@
 
         <div class="wa-list">
             @forelse($records as $record)
-                <div class="wa-district" data-incidence="{{ number_format((float) $record->incidence, 2, '.', '') }}" data-status="{{ $record->incidence < 3 ? 'Aman' : ($record->incidence < 10 ? 'Waspada' : 'Awas') }}" data-recommendation="{{ $record->incidence < 3 ? 'Lanjutkan surveilans rutin, edukasi pencegahan, dan pemantauan faktor iklim.' : ($record->incidence < 10 ? 'Tingkatkan surveilans, validasi laporan, dan kesiapsiagaan logistik.' : 'Aktifkan respon cepat (RRT), surveilans harian, penyelidikan epidemiologi, dan koordinasi lintas sektor.') }}">
+                <div class="wa-district" data-incidence="{{ number_format((float) $record->incidence, 2, '.', '') }}" data-status="{{ $record->incidence < 3 ? 'Aman' : ($record->incidence <= 10 ? 'Waspada' : 'Awas') }}" data-recommendation="{{ $record->incidence < 3 ? 'Surveilans rutin kasus di FKTP dan vektor; edukasi 3M Plus; pantau kasus, vektor, dan lingkungan.' : ($record->incidence <= 10 ? 'Tingkatkan surveilans kasus dan vektor; larvasidasi selektif; pastikan kelambu berinsektisida; edukasi risiko.' : 'Aktifkan RRT kabupaten; surveilans harian; larvasidasi dan IRS di wilayah berisiko; pastikan obat, RDT, dan logistik; mobilisasi lintas sektor.') }}">
                     <div class="wa-summary">
                         <strong>Kabupaten {{ $record->district }}</strong>
-                        <span class="badge {{ $record->incidence < 3 ? 'safe' : ($record->incidence < 10 ? 'caution' : 'danger') }}">
-                            {{ $record->incidence < 3 ? 'Aman' : ($record->incidence < 10 ? 'Waspada' : 'Awas') }} · AI {{ number_format((float) $record->incidence, 2, ',', '.') }}
+                        <span class="badge {{ $record->incidence < 3 ? 'safe' : ($record->incidence <= 10 ? 'caution' : 'danger') }}">
+                            {{ $record->incidence < 3 ? 'Aman' : ($record->incidence <= 10 ? 'Waspada' : 'Awas') }} · AI {{ number_format((float) $record->incidence, 2, ',', '.') }} / 1.000
                         </span>
                     </div>
                     @forelse($whatsappRecipients->get($record->district, collect()) as $recipient)

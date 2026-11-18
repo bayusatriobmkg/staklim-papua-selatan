@@ -21,7 +21,7 @@ use Illuminate\View\View;
 class DashboardController extends Controller
 {
     private const DISTRICTS = ['Asmat', 'Boven Digoel', 'Mappi', 'Merauke'];
-    private const DEFAULT_WHATSAPP_TEMPLATE = "Peringatan Dini Malaria\nYth. {{recipient}}\nPeriode : {{period}}\nKabupaten : {{district}}\nStatus : {{status}} (AI {{incidence}}/100.000 penduduk)\nRekomendasi : {{recommendation}}\nDikirim dari Dashboard SILING MALARIA - BMKG x Dinkes Papua Selatan";
+    private const DEFAULT_WHATSAPP_TEMPLATE = "Peringatan Dini Malaria\nYth. {{recipient}}\nPeriode : {{period}}\nKabupaten : {{district}}\nStatus : {{status}} (AI {{incidence}}/1.000 penduduk)\nRekomendasi : {{recommendation}}\nDikirim dari Dashboard SILING MALARIA - BMKG x Dinkes Papua Selatan";
 
     public function index(): View
     {
@@ -105,6 +105,8 @@ class DashboardController extends Controller
         $period = $this->adminPeriod();
         $whatsappRecipients = WhatsappRecipient::orderBy('district')->orderBy('name')->get()->groupBy('district');
         $records = Incident::where('period', $period)->orderBy('district')->get();
+        $whatsappTemplate = SystemSetting::where('key', 'malaria_whatsapp_template')->value('value') ?: self::DEFAULT_WHATSAPP_TEMPLATE;
+        $whatsappTemplate = str_replace('100.000 penduduk', '1.000 penduduk', $whatsappTemplate);
         $editingDistrict = request()->query('edit');
         $editingObservation = is_string($editingDistrict) && in_array($editingDistrict, self::DISTRICTS, true)
             ? MalariaObservation::where('period', $period)->where('district', $editingDistrict)->first()
@@ -127,7 +129,7 @@ class DashboardController extends Controller
             'climateSuitabilities' => ClimateSuitability::where('period', $period)->orderBy('district')->get(),
             'malariaObservations' => MalariaObservation::where('period', $period)->orderBy('district')->get(),
             'editingObservation' => $editingObservation,
-            'whatsappTemplate' => SystemSetting::where('key', 'malaria_whatsapp_template')->value('value') ?: self::DEFAULT_WHATSAPP_TEMPLATE,
+            'whatsappTemplate' => $whatsappTemplate,
             'whatsappRecipients' => $whatsappRecipients,
             'earlyWarnings' => ClimateEarlyWarning::orderBy('category')->orderBy('district')->get(),
             'hthObservations' => HthObservation::orderBy('district')->orderBy('station_name')->get(),
