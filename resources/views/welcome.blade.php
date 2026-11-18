@@ -2508,6 +2508,9 @@
             box-shadow: var(--shadow-sm);
         }
         .map-legend strong { display: block; font-size: 10px; margin-bottom: 7px; color: var(--bmkg-navy); }
+        .climate-legend .legend-group { margin-top: 6px; }
+        .climate-legend .legend-group-title { display: block; font-size: 10px; line-height: 1.2; font-weight: 800; color: var(--bmkg-navy); margin-bottom: 2px; }
+        .climate-legend .legend-row { margin: 3px 0; }
         .legend-row { display: flex; align-items: center; gap: 7px; font-size: 10px; color: var(--ink-secondary); margin: 4px 0; }
         .swatch { width: 11px; height: 11px; border-radius: 3px; }
         .map-note { position: absolute; right: 12px; bottom: 12px; color: var(--muted); font-size: 9px; background: #ffffffd9; padding: 4px 7px; border-radius: 6px; }
@@ -4432,7 +4435,12 @@
                 <div class="map-shell climate-map-shell">
                     <svg id="climate-map" viewBox="0 0 520 500" role="img" aria-label="Peta probabilitas kesesuaian iklim untuk malaria di Papua Selatan"></svg>
                     <div id="climate-map-popup" class="map-popup" role="status" aria-live="polite"><button type="button" class="map-popup-close" aria-label="Tutup informasi">×</button><div class="map-popup-title"></div><div class="map-popup-detail popup-period"></div><div class="map-popup-detail popup-probability"></div><div class="map-popup-detail popup-humidity"></div><div class="map-popup-detail popup-status"></div></div>
-                    <div class="map-legend climate-legend"><strong style="grid-column:1/-1">Probabilitas kesesuaian</strong><div class="legend-row"><i class="swatch" style="background:#b52320"></i>&gt;90%</div><div class="legend-row"><i class="swatch" style="background:#e1441c"></i>80–90%</div><div class="legend-row"><i class="swatch" style="background:#f27a18"></i>70–80%</div><div class="legend-row"><i class="swatch" style="background:#f5bd00"></i>60–70%</div><div class="legend-row"><i class="swatch" style="background:#f4e500"></i>50–60%</div><div class="legend-row"><i class="swatch" style="background:#8fe45e"></i>40–50%</div><div class="legend-row"><i class="swatch" style="background:#12d7d2"></i>30–40%</div><div class="legend-row"><i class="swatch" style="background:#2a9af0"></i>20–30%</div><div class="legend-row"><i class="swatch" style="background:#2935df"></i>10–20%</div><div class="legend-row"><i class="swatch" style="background:#fff;border:1px solid #dce5e8"></i>&lt;10%</div></div>
+                    <div class="map-legend climate-legend" aria-label="Legenda probabilitas kesesuaian iklim">
+                        <strong>Probabilitas<br>kecocokan</strong>
+                        <div class="legend-group"><span class="legend-group-title">Tinggi</span><div class="legend-row"><i class="swatch" style="background:#d00000"></i>&gt;90%</div><div class="legend-row"><i class="swatch" style="background:#ff3300"></i>80–90%</div><div class="legend-row"><i class="swatch" style="background:#ff9900"></i>70–80%</div></div>
+                        <div class="legend-group"><span class="legend-group-title">Sedang</span><div class="legend-row"><i class="swatch" style="background:#ffff00"></i>60–70%</div><div class="legend-row"><i class="swatch" style="background:#bfff00"></i>50–60%</div><div class="legend-row"><i class="swatch" style="background:#33cc33"></i>40–50%</div></div>
+                        <div class="legend-group"><span class="legend-group-title">Rendah</span><div class="legend-row"><i class="swatch" style="background:#00cccc"></i>30–40%</div><div class="legend-row"><i class="swatch" style="background:#00a6e6"></i>20–30%</div><div class="legend-row"><i class="swatch" style="background:#0066ff"></i>10–20%</div><div class="legend-row"><i class="swatch" style="background:#0000cc"></i>&lt;10%</div></div>
+                    </div>
                     <div class="map-note">Batas kabupaten · BIG 2026</div>
                 </div>
             </article>
@@ -4610,7 +4618,7 @@
     const features = @json(json_decode(file_get_contents(public_path('data/papua-selatan-kabupaten.geojson')), true)['features']);
     const ns = 'http://www.w3.org/2000/svg';
     const make = (tag, attrs = {}) => { const node = document.createElementNS(ns, tag); Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value)); return node; };
-    const color = value => value === null ? '#dce8e3' : value > 90 ? '#b52320' : value >= 80 ? '#e1441c' : value >= 70 ? '#f27a18' : value >= 60 ? '#f5bd00' : value >= 50 ? '#f4e500' : value >= 40 ? '#8fe45e' : value >= 30 ? '#12d7d2' : value >= 20 ? '#2a9af0' : value >= 10 ? '#2935df' : '#fff';
+    const color = value => value === null ? '#dce8e3' : value > 90 ? '#d00000' : value >= 80 ? '#ff3300' : value >= 70 ? '#ff9900' : value >= 60 ? '#ffff00' : value >= 50 ? '#bfff00' : value >= 40 ? '#33cc33' : value >= 30 ? '#00cccc' : value >= 20 ? '#00a6e6' : value >= 10 ? '#0066ff' : '#0000cc';
     const category = value => value === null ? 'Belum ada data' : value > 90 ? 'Sangat tinggi' : value >= 70 ? 'Tinggi' : value >= 40 ? 'Sedang' : 'Rendah';
     const allPoints = [];
     const visit = item => { if (Array.isArray(item) && typeof item[0] === 'number') allPoints.push(item); else if (Array.isArray(item)) item.forEach(visit); };
