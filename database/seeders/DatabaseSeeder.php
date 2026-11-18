@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,16 +14,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::updateOrCreate(
-            ['email' => 'staklim.merauke@gmail.com'],
-            [
-                'name' => 'Admin Stasiun Klimatologi Papua Selatan',
-                'password' => \Illuminate\Support\Facades\Hash::make('staklimPAPUASELATAN123!'),
-            ]
-        );
-
         \App\Models\ClimateBulletin::updateOrCreate(
             ['edition' => 'Edisi November 2026'],
             [

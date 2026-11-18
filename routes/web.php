@@ -13,8 +13,7 @@ Route::get('/produk/siling-malaria', [DashboardController::class, 'silingMalaria
 Route::get('/layanan-produk', fn() => redirect()->route('products'));
 Route::get('/kontak', [DashboardController::class, 'contact'])->name('contact');
 
-// Panel pengelola sementara dapat dibuka tanpa login.
-Route::get('/login', fn () => redirect()->route('admin'))->name('login');
+// Panel pengelola dibuka tanpa autentikasi.
 Route::get('/admin', [DashboardController::class, 'admin'])->name('admin');
 
 // Manajemen Operasional & WhatsApp
