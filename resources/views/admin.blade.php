@@ -482,6 +482,11 @@
         .climate-form .btn { grid-column: 1 / -1; width: 100%; }
         .suitability-form { grid-template-columns: 1.05fr 1fr 1fr 1fr auto; }
         .suitability-form .btn { white-space: nowrap; }
+        .malaria-input-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 18px; }
+        .malaria-input-nav a { display: inline-flex; align-items: center; min-height: 34px; padding: 6px 11px; border: 1px solid var(--line); border-radius: 20px; background: #f8fafc; color: var(--bmkg-navy); text-decoration: none; font-size: 11px; font-weight: 700; }
+        .malaria-input-nav a:hover { border-color: var(--bmkg-blue); color: var(--bmkg-blue-dark); }
+        .malaria-period-note { margin: 8px 0 14px; padding: 9px 11px; border-left: 3px solid var(--bmkg-blue); border-radius: 4px; background: var(--bmkg-blue-light); color: var(--bmkg-navy); font-size: 12px; }
+        .malaria-form-note { margin: 0 0 12px; color: var(--muted); font-size: 12px; }
 
         .template-label { display: block; font-size: 11px; font-weight: 700; color: var(--ink-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
         .template-form textarea { display: block; width: 100%; resize: vertical; border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 12px; color: var(--ink); font: inherit; font-size: 12.5px; line-height: 1.6; }
@@ -979,8 +984,17 @@
 
     <!-- 4. INPUT ANGKA INSIDEN MALARIA (SILING MALARIA) -->
     <section class="card" id="kelola-siling-malaria">
-        <h3>Angka Insiden (AI) Malaria per Kabupaten</h3>
-        <p class="sub">Periode aktif: <strong>{{ $periodLabel }}</strong>. Jika kabupaten dan periode yang sama sudah ada, nilai sebelumnya akan diperbarui.</p>
+        <h3>Input Data Malaria</h3>
+        <p class="sub">Pilih jenis data yang ingin dimasukkan. Setiap formulir menyimpan data secara terpisah untuk kabupaten dan periode yang dipilih.</p>
+        <div class="malaria-period-note">Periode aktif untuk semua input: <strong>{{ $periodLabel }}</strong>. Ubah bulan dan tahun melalui pilihan periode di bagian atas halaman.</div>
+        <nav class="malaria-input-nav" aria-label="Pilih formulir data malaria">
+            <a href="#malaria-ai-input">1. Angka insiden</a>
+            <a href="#malaria-climate-input">2. Kesesuaian iklim</a>
+            <a href="#malaria-trend-input">3. Kasus dan parameter iklim</a>
+        </nav>
+        <div id="malaria-ai-input">
+        <h4>1. Angka Insiden Malaria</h4>
+        <p class="malaria-form-note">Masukkan angka insiden per 100.000 penduduk. Jika kabupaten dan periode yang sama sudah ada, nilainya akan diperbarui.</p>
         <form method="post" novalidate action="{{ route('incidents.store', [], false) }}" class="form">
             @csrf
             <input type="hidden" name="period" value="{{ $period }}">
@@ -1032,12 +1046,13 @@
                 </tbody>
             </table>
         </div>
+        </div>
     </section>
 
     <!-- 4. PREDIKSI KESESUAIAN IKLIM UNTUK MALARIA -->
-    <section class="card">
-        <h3>Prediksi Kesesuaian Iklim untuk Vektor Malaria</h3>
-        <p class="sub">Masukkan estimasi kesesuaian iklim (probabilitas dan kelembapan RH) untuk periode {{ $periodLabel }}. Data divisualisasikan pada peta tematik SILING.</p>
+    <section class="card" id="malaria-climate-input">
+        <h3>2. Kesesuaian Iklim Malaria</h3>
+        <p class="malaria-form-note">Isi probabilitas kecocokan, kelembapan jika tersedia, dan tingkat keyakinan untuk periode {{ $periodLabel }}. Data ini mengatur peta prediksi SILING.</p>
         <form method="post" novalidate action="{{ route('climate-suitability.store', [], false) }}" class="form suitability-form">
             @csrf
             <input type="hidden" name="period" value="{{ $period }}">
@@ -1101,9 +1116,9 @@
     </section>
 
     <!-- 5. DATA GRAFIK HISTORIS KASUS & IKLIM -->
-    <section class="card">
-        <h3>Data Historis Tren Kasus &amp; Parameter Cuaca</h3>
-        <p class="sub">Input observasi jumlah kasus, kelembapan udara, suhu udara, dan curah hujan untuk analisis tren bulanan.</p>
+    <section class="card" id="malaria-trend-input">
+        <h3>3. Kasus Malaria dan Parameter Iklim</h3>
+        <p class="malaria-form-note">Masukkan jumlah kasus dan parameter iklim bulanan untuk grafik tren. Kelembapan, suhu, dan curah hujan boleh dikosongkan jika belum tersedia.</p>
         <form method="post" novalidate action="{{ route('malaria-observations.store', [], false) }}" class="form climate-form">
             @csrf
             <input type="hidden" name="period" value="{{ $period }}">
