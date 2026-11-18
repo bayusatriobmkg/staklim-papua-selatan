@@ -606,7 +606,7 @@
                 <p class="sub">Atur status peringatan dini per kabupaten (Awas, Siaga, Waspada, Tidak Ada Peringatan) beserta daftar kecamatan/distrik terdampak untuk peta dan tabel publik.</p>
             </div>
         </div>
-        <form method="post" action="{{ route('early-warning.store', [], false) }}" class="form" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; align-items:end;">
+        <form method="post" novalidate action="{{ route('early-warning.store', [], false) }}" class="form" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; align-items:end;">
             @csrf
             <div class="field">
                 <label for="ew_category">Jenis Peringatan</label>
@@ -687,7 +687,7 @@
                         <td data-label="Periode"><small>{{ $ew->period }}</small></td>
                         <td data-label="Aksi" style="white-space:nowrap;">
                             <a class="edit-link" href="{{ route('admin', ['edit_ew' => $ew->id]) }}#kelola-peringatan-dini">Edit</a>
-                            <form method="post" action="{{ route('early-warning.destroy', $ew, false) }}" style="display:inline;" onsubmit="return confirm('Hapus data peringatan dini {{ $ew->category }} untuk {{ $ew->district }}?')">
+                            <form method="post" novalidate action="{{ route('early-warning.destroy', $ew, false) }}" style="display:inline;" onsubmit="return confirm('Hapus data peringatan dini {{ $ew->category }} untuk {{ $ew->district }}?')">
                                 @csrf @method('delete')
                                 <button class="delete" type="submit">Hapus</button>
                             </form>
@@ -709,7 +709,7 @@
                 <p class="sub">Input titik koordinat pos hujan dan jumlah Hari Tanpa Hujan (HTH). Skala warna ditentukan otomatis sesuai standar Klimatologi BMKG.</p>
             </div>
         </div>
-        <form method="post" action="{{ route('hth-observation.store', [], false) }}" class="form" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; align-items:end;">
+        <form method="post" novalidate action="{{ route('hth-observation.store', [], false) }}" class="form" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; align-items:end;">
             @csrf
             @if($editingHth)
                 <input type="hidden" name="id" value="{{ $editingHth->id }}">
@@ -788,7 +788,7 @@
                         <td data-label="Tanggal"><small>{{ $st->updated_date ? $st->updated_date->format('d/m/Y') : '—' }}</small></td>
                         <td data-label="Aksi" style="white-space:nowrap;">
                             <a class="edit-link" href="{{ route('admin', ['edit_hth' => $st->id]) }}#kelola-pos-hth">Edit</a>
-                            <form method="post" action="{{ route('hth-observation.destroy', $st, false) }}" style="display:inline;" onsubmit="return confirm('Hapus pos pengamatan {{ $st->station_name }}?')">
+                            <form method="post" novalidate action="{{ route('hth-observation.destroy', $st, false) }}" style="display:inline;" onsubmit="return confirm('Hapus pos pengamatan {{ $st->station_name }}?')">
                                 @csrf @method('delete')
                                 <button class="delete" type="submit">Hapus</button>
                             </form>
@@ -823,7 +823,7 @@
             </div>
         @endif
 
-        <form method="post" action="{{ route('bulletin.store', [], false) }}" enctype="multipart/form-data" class="form" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; align-items:start;">
+        <form method="post" novalidate action="{{ route('bulletin.store', [], false) }}" enctype="multipart/form-data" class="form" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; align-items:start;">
             @csrf
             @if($editingBulletin)
                 <input type="hidden" name="id" value="{{ $editingBulletin->id }}">
@@ -958,7 +958,7 @@
                             <td>
                                 <div style="display:flex; gap:6px; align-items:center;">
                                     <a href="{{ route('admin', ['edit_bulletin' => $b->id]) }}#kelola-buletin-iklim" class="edit-link">Edit</a>
-                                    <form method="post" action="{{ route('bulletin.destroy', $b->id, false) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buletin ini?');" style="margin:0;">
+                                    <form method="post" novalidate action="{{ route('bulletin.destroy', $b->id, false) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buletin ini?');" style="margin:0;">
                                         @csrf
                                         @method('delete')
                                         <button class="delete" type="submit">Hapus</button>
@@ -981,7 +981,7 @@
     <section class="card" id="kelola-siling-malaria">
         <h3>Angka Insiden (AI) Malaria per Kabupaten</h3>
         <p class="sub">Periode aktif: <strong>{{ $periodLabel }}</strong>. Jika kabupaten dan periode yang sama sudah ada, nilai sebelumnya akan diperbarui.</p>
-        <form method="post" action="{{ route('incidents.store', [], false) }}" class="form">
+        <form method="post" novalidate action="{{ route('incidents.store', [], false) }}" class="form">
             @csrf
             <input type="hidden" name="period" value="{{ $period }}">
             <div class="field">
@@ -1020,7 +1020,7 @@
                             <td data-label="Angka insiden" class="value">{{ number_format($record->incidence, 2, ',', '.') }}</td>
                             <td data-label="Status"><span class="badge {{ $class }}">{{ $status }}</span></td>
                             <td data-label="Aksi">
-                                <form method="post" action="{{ route('incidents.destroy', $record, false) }}" onsubmit="return confirm('Hapus data {{ $record->district }} periode ini?')">
+                                <form method="post" novalidate action="{{ route('incidents.destroy', $record, false) }}" onsubmit="return confirm('Hapus data {{ $record->district }} periode ini?')">
                                     @csrf @method('delete')
                                     <button class="delete" type="submit">Hapus</button>
                                 </form>
@@ -1038,7 +1038,7 @@
     <section class="card">
         <h3>Prediksi Kesesuaian Iklim untuk Vektor Malaria</h3>
         <p class="sub">Masukkan estimasi kesesuaian iklim (probabilitas dan kelembapan RH) untuk periode {{ $periodLabel }}. Data divisualisasikan pada peta tematik SILING.</p>
-        <form method="post" action="{{ route('climate-suitability.store', [], false) }}" class="form suitability-form">
+        <form method="post" novalidate action="{{ route('climate-suitability.store', [], false) }}" class="form suitability-form">
             @csrf
             <input type="hidden" name="period" value="{{ $period }}">
             <div class="field">
@@ -1104,7 +1104,7 @@
     <section class="card">
         <h3>Data Historis Tren Kasus &amp; Parameter Cuaca</h3>
         <p class="sub">Input observasi jumlah kasus, kelembapan udara, suhu udara, dan curah hujan untuk analisis tren bulanan.</p>
-        <form method="post" action="{{ route('malaria-observations.store', [], false) }}" class="form climate-form">
+        <form method="post" novalidate action="{{ route('malaria-observations.store', [], false) }}" class="form climate-form">
             @csrf
             <input type="hidden" name="period" value="{{ $period }}">
             <div class="field">
@@ -1172,7 +1172,7 @@
     <section class="card" id="kelola-notifikasi-wa">
         <h3>Template Pesan &amp; Notifikasi WhatsApp Nakes</h3>
         <p class="sub">Konfigurasi pesan otomatis peringatan dini yang dikirim ke tenaga kesehatan (nakes) di tiap kabupaten.</p>
-        <form method="post" action="{{ route('whatsapp-template.save', [], false) }}" class="template-form">
+        <form method="post" novalidate action="{{ route('whatsapp-template.save', [], false) }}" class="template-form">
             @csrf
             <input type="hidden" name="period" value="{{ $period }}">
             <label class="template-label" for="whatsapp_template">Format Template Pesan</label>
@@ -1182,7 +1182,7 @@
         </form>
 
         <h4 style="margin: 28px 0 10px; font-size: 14px; color: var(--bmkg-navy); font-weight: 800;">Daftar Kontak Nakes per Kabupaten</h4>
-        <form method="post" action="{{ request()->getBaseUrl() }}/penerima-whatsapp" class="recipient-form">
+        <form method="post" novalidate action="{{ request()->getBaseUrl() }}/penerima-whatsapp" class="recipient-form">
             @csrf
             <input type="hidden" name="period" value="{{ $period }}">
             <div class="field">
@@ -1226,7 +1226,7 @@
                                     Kirim WA
                                 </button>
                             </form>
-                            <form method="post" action="{{ request()->getBaseUrl() }}/penerima-whatsapp/{{ $recipient->id }}" onsubmit="return confirm('Hapus kontak {{ $recipient->name }}?')">
+                            <form method="post" novalidate action="{{ request()->getBaseUrl() }}/penerima-whatsapp/{{ $recipient->id }}" onsubmit="return confirm('Hapus kontak {{ $recipient->name }}?')">
                                 @csrf @method('delete')
                                 <input type="hidden" name="period" value="{{ $period }}">
                                 <button class="delete" type="submit">Hapus</button>
