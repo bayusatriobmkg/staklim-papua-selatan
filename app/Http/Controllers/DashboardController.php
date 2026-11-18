@@ -21,6 +21,7 @@ use Illuminate\View\View;
 class DashboardController extends Controller
 {
     private const DISTRICTS = ['Asmat', 'Boven Digoel', 'Mappi', 'Merauke'];
+    private const HTH_DISTRICTS = ['Asmat', 'Boven Digoel', 'Mappi', 'Merauke', 'Timika'];
     private const DEFAULT_WHATSAPP_TEMPLATE = "Peringatan Dini Malaria\nYth. {{recipient}}\nPeriode : {{period}}\nKabupaten : {{district}}\nStatus : {{status}} (AI {{incidence}}/1.000 penduduk)\nRekomendasi : {{recommendation}}\nDikirim dari Dashboard SILING MALARIA - BMKG x Dinkes Papua Selatan";
 
     public function index(): View
@@ -134,6 +135,7 @@ class DashboardController extends Controller
             'earlyWarnings' => ClimateEarlyWarning::orderBy('category')->orderBy('district')->get(),
             'hthObservations' => HthObservation::orderBy('district')->orderBy('station_name')->get(),
             'hthClassifications' => HthObservation::CLASSIFICATIONS,
+            'hthDistricts' => self::HTH_DISTRICTS,
             'editingHth' => $editingHth,
             'editingEw' => $editingEw,
             'dasarianImages' => DasarianClimateImage::orderBy('order')->orderBy('id', 'desc')->get(),
@@ -181,7 +183,7 @@ class DashboardController extends Controller
         $validated = $request->validate([
             'id' => ['nullable', 'integer', 'exists:hth_observations,id'],
             'station_name' => ['required', 'string', 'max:128'],
-            'district' => ['required', 'string', 'in:'.implode(',', self::DISTRICTS)],
+            'district' => ['required', 'string', 'in:'.implode(',', self::HTH_DISTRICTS)],
             'subdistrict' => ['nullable', 'string', 'max:64'],
             'latitude' => ['required', 'numeric', 'between:-12,-3'],
             'longitude' => ['required', 'numeric', 'between:135,143'],
@@ -192,14 +194,32 @@ class DashboardController extends Controller
         $days = (int) $validated['days'];
         $validated['classification'] = HthObservation::computeClassification($days);
         $validated['updated_date'] = $validated['updated_date'] ?? now()->toDateString();
+        $validated['latitude'] = round((float) $validated['latitude'], 6);
+        $validated['longitude'] = round((float) $validated['longitude'], 6);
 
         if (!empty($validated['id'])) {
             $station = HthObservation::findOrFail($validated['id']);
-            $station->update($validated);
-            $msg = "Pos {$validated['station_name']} berhasil diperbarui.";
+            $samePoint = HthObservation::where('latitude', $validated['latitude'])
+                ->where('longitude', $validated['longitude'])
+                ->where('id', '!=', $station->id)
+                ->first();
+
+            if ($samePoint) {
+                $samePoint->update($validated);
+                $station->delete();
+                $msg = "Pembacaan titik {$validated['station_name']} diperbarui dan duplikat titik disatukan.";
+            } else {
+                $station->update($validated);
+                $msg = "Pos {$validated['station_name']} berhasil diperbarui.";
+            }
         } else {
-            HthObservation::create($validated);
-            $msg = "Pos {$validated['station_name']} berhasil ditambahkan.";
+            $station = HthObservation::updateOrCreate(
+                ['latitude' => $validated['latitude'], 'longitude' => $validated['longitude']],
+                $validated,
+            );
+            $msg = $station->wasRecentlyCreated
+                ? "Pos {$validated['station_name']} berhasil ditambahkan."
+                : "Pembacaan titik {$validated['station_name']} berhasil diperbarui.";
         }
 
         return back()->with('success', $msg);

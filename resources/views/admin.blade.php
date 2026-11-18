@@ -727,7 +727,7 @@
                 <label for="hth_district">Kabupaten</label>
                 <select id="hth_district" name="district" required>
                     <option value="">Pilih kabupaten</option>
-                    @foreach($districts as $d)
+                    @foreach($hthDistricts as $d)
                         <option value="{{ $d }}" @selected(old('district', $editingHth?->district) === $d)>{{ $d }}</option>
                     @endforeach
                 </select>
@@ -760,7 +760,7 @@
             </div>
         </form>
 
-        <p class="hint">Klasifikasi BMKG: <strong>0 hari</strong> (Ada Hujan), <strong>1–5 hari</strong> (Sangat Pendek), <strong>6–10 hari</strong> (Pendek), <strong>11–20 hari</strong> (Menengah), <strong>21–30 hari</strong> (Panjang), <strong>31–60 hari</strong> (Sangat Panjang), <strong>&gt;60 hari</strong> (Kekeringan Ekstrem).</p>
+        <p class="hint">Klasifikasi BMKG: <strong>Hujan / 0 hari</strong>, <strong>1–5 hari</strong> (Sangat Pendek), <strong>6–10 hari</strong> (Pendek), <strong>11–20 hari</strong> (Menengah), <strong>21–30 hari</strong> (Panjang), <strong>31–60 hari</strong> (Sangat Panjang), <strong>&gt;60 hari</strong> (Kekeringan Ekstrem).</p>
 
         <div class="table-wrap">
             <table class="table">

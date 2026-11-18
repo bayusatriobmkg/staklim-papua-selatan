@@ -25,6 +25,11 @@ class HthObservation extends Model
     ];
 
     public const CLASSIFICATIONS = [
+        'Hujan' => [
+            'label' => 'Hujan',
+            'desc' => 'Ada hujan / 0 hari tanpa hujan',
+            'color' => '#0e4429',
+        ],
         '0 hari' => [
             'label' => '0 hari',
             'desc' => 'Ada Hujan / 0 Hari',
@@ -64,7 +69,7 @@ class HthObservation extends Model
 
     public static function computeClassification(int $days): string
     {
-        if ($days === 0) return '0 hari';
+        if ($days === 0) return 'Hujan';
         if ($days <= 5) return '1–5 hari';
         if ($days <= 10) return '6–10 hari';
         if ($days <= 20) return '11–20 hari';

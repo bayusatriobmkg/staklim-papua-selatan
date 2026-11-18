@@ -3579,7 +3579,7 @@
                         <div id="leaflet-hth-map" class="monitor-leaflet-map"></div>
                         <div class="monitor-legend-box">
                             <h4>Klasifikasi HTH</h4>
-                            <div class="legend-item"><span class="legend-box-sq" style="background:#0e4429"></span> 0 hari</div>
+                            <div class="legend-item"><span class="legend-box-sq" style="background:#0e4429"></span> Hujan / 0 hari</div>
                             <div class="legend-item"><span class="legend-box-sq" style="background:#22c55e"></span> 1–5 hari</div>
                             <div class="legend-item"><span class="legend-box-sq" style="background:#facc15"></span> 6–10 hari</div>
                             <div class="legend-item"><span class="legend-box-sq" style="background:#f97316"></span> 11–20 hari</div>
