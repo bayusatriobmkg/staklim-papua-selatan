@@ -4374,12 +4374,6 @@
     @else
     <!-- SUB-PAGE 2: SILING MALARIA -->
     <div id="malaria">
-        <div class="section-intro">
-            <div class="eyebrow">Produk Inovasi Iklim Sektoral · Kesehatan Masyarakat</div>
-            <h2>SILING MALARIA (Sistem Peringatan Dini Berbasis Iklim)</h2>
-            <p>Sistem integrasi pemodelan prediksi iklim dan angka insiden malaria bulanan di 4 kabupaten Provinsi Papua Selatan hasil kolaborasi BMKG dan Dinas Kesehatan.</p>
-        </div>
-
         <section class="hero">
             <div>
                 <div class="eyebrow">Sistem Informasi Iklim untuk Kesehatan</div>
