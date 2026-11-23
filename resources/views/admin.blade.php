@@ -553,10 +553,19 @@
         <span class="topbar-institution">Badan Meteorologi, Klimatologi, dan Geofisika</span>
         <h1 class="topbar-title">Stasiun Klimatologi Papua Selatan <span class="topbar-badge"><span class="topbar-badge-dot"></span> Panel Pengelola</span></h1>
     </div>
-    <a class="topbar-nav" href="{{ route('dashboard') }}">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        Kembali ke Portal Publik
-    </a>
+    <div style="display:flex; align-items:center; gap:8px;">
+        <a class="topbar-nav" href="{{ route('dashboard') }}">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Kembali ke Portal Publik
+        </a>
+        <form method="post" action="{{ route('logout') }}" style="margin:0;">
+            @csrf
+            <button type="submit" class="topbar-nav" style="border:1px solid #fecaca; background:#fff1f2; color:#b91c1c; cursor:pointer;" title="Keluar dari sesi admin">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                Keluar
+            </button>
+        </form>
+    </div>
 </header>
 
 <main class="wrap">

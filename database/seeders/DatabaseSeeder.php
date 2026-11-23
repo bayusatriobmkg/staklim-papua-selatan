@@ -14,6 +14,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        \App\Models\User::updateOrCreate(
+            ['email' => 'staklim.merauke@gmail.com'],
+            [
+                'name' => 'Admin Stasiun Klimatologi Papua Selatan',
+                'password' => \Illuminate\Support\Facades\Hash::make('admin123'),
+            ]
+        );
+
         \App\Models\ClimateBulletin::updateOrCreate(
             ['edition' => 'Edisi November 2026'],
             [
