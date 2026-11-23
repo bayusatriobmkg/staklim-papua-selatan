@@ -247,27 +247,21 @@
             position: sticky;
             top: 72px;
             z-index: 90;
+            padding: 0 clamp(16px, 4vw, 40px);
+            overflow: visible;
         }
         .admin-subnav-container {
             display: flex;
             align-items: center;
-            gap: 4px;
-            overflow-x: auto;
-            scrollbar-width: thin;
-            padding: 0 4px;
-        }
-        .admin-subnav-container::-webkit-scrollbar {
-            height: 4px;
-        }
-        .admin-subnav-container::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
+            gap: 6px;
+            flex-wrap: wrap;
+            overflow: visible;
         }
         .subnav-item {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 13px 18px;
+            gap: 7px;
+            padding: 12px 14px;
             font-size: 13px;
             font-weight: 700;
             color: var(--ink-secondary);
@@ -288,7 +282,7 @@
             font-weight: 800;
         }
         .subnav-icon {
-            font-size: 15px;
+            font-size: 14px;
             line-height: 1;
         }
         .subnav-count {
@@ -318,9 +312,6 @@
         .wrap {
             width: min(1140px, calc(100% - 32px));
             margin: 24px auto 60px;
-        }
-        .admin-subnav .wrap {
-            margin: 0 auto;
         }
 
         .page-heading {
@@ -747,7 +738,7 @@
 </header>
 
 <nav class="admin-subnav" aria-label="Navigasi Modul Panel Pengelola">
-    <div class="wrap admin-subnav-container">
+    <div class="admin-subnav-container">
         <a href="{{ route('admin', ['tab' => 'peringatan-dini']) }}" class="subnav-item {{ $activeTab === 'peringatan-dini' ? 'is-active' : '' }}">
             <span class="subnav-icon">⚠️</span>
             <span class="subnav-label">Peringatan Dini</span>
