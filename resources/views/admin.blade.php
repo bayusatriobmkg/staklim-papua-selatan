@@ -239,13 +239,91 @@
             transform: translateY(-1px);
         }
 
+        /* Secondary Tab Navigation Bar (Subnav) */
+        .admin-subnav {
+            background: #ffffff;
+            border-bottom: 2px solid #e2e8f0;
+            box-shadow: 0 2px 6px rgba(0, 43, 73, 0.03);
+            position: sticky;
+            top: 72px;
+            z-index: 90;
+        }
+        .admin-subnav-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            padding: 0 4px;
+        }
+        .admin-subnav-container::-webkit-scrollbar {
+            height: 4px;
+        }
+        .admin-subnav-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .subnav-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 18px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--ink-secondary);
+            text-decoration: none;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: all .2s ease;
+            position: relative;
+        }
+        .subnav-item:hover {
+            color: var(--bmkg-blue);
+            background: #f8fafc;
+        }
+        .subnav-item.is-active {
+            color: var(--bmkg-navy);
+            border-bottom-color: var(--bmkg-blue);
+            background: #f0f9ff;
+            font-weight: 800;
+        }
+        .subnav-icon {
+            font-size: 15px;
+            line-height: 1;
+        }
+        .subnav-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 800;
+            background: #e2e8f0;
+            color: var(--ink-secondary);
+            transition: all .2s ease;
+        }
+        .subnav-item.is-active .subnav-count {
+            background: var(--bmkg-blue);
+            color: #ffffff;
+        }
+        .subnav-item:hover .subnav-count {
+            background: #bae6fd;
+            color: var(--bmkg-blue-dark);
+        }
+
         /* Container Layout */
         .wrap {
             width: min(1140px, calc(100% - 32px));
-            margin: 28px auto 60px;
+            margin: 24px auto 60px;
+        }
+        .admin-subnav .wrap {
+            margin: 0 auto;
         }
 
-        .heading {
+        .page-heading {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
@@ -253,6 +331,10 @@
             margin-bottom: 24px;
             padding-bottom: 18px;
             border-bottom: 1px solid var(--line);
+        }
+        .page-heading-with-filter {
+            align-items: center;
+            flex-wrap: wrap;
         }
         .eyebrow {
             font-size: 11px;
@@ -263,15 +345,15 @@
             margin-bottom: 4px;
             display: inline-block;
         }
-        .heading h2 {
-            font-size: clamp(22px, 2.5vw, 28px);
+        .page-heading h2 {
+            font-size: clamp(20px, 2.3vw, 26px);
             letter-spacing: -.03em;
             color: var(--bmkg-navy);
             font-weight: 800;
             margin: 0;
             line-height: 1.25;
         }
-        .heading p {
+        .page-heading p {
             margin: 4px 0 0;
             color: var(--muted);
             font-size: 13px;
@@ -458,53 +540,7 @@
             color: var(--bmkg-blue-dark);
         }
 
-        .admin-quicknav-wrap {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
-            padding: 10px 16px;
-            background: #ffffff;
-            border: 1.5px solid var(--line);
-            border-radius: var(--r-md);
-            box-shadow: 0 1px 4px rgba(0, 43, 73, 0.04);
-            overflow-x: auto;
-        }
-        .quicknav-label {
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: .06em;
-            white-space: nowrap;
-        }
-        .admin-quicknav {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .admin-quicklink {
-            padding: 7px 13px;
-            background: #f8fafc;
-            border: 1px solid var(--line);
-            border-radius: 999px;
-            font-size: 11.5px;
-            font-weight: 700;
-            color: var(--bmkg-navy);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-            transition: all .2s ease;
-        }
-        .admin-quicklink:hover {
-            background: var(--bmkg-blue-light);
-            border-color: #bae6fd;
-            color: var(--bmkg-blue-dark);
-            transform: translateY(-1px);
-        }
+
 
         /* Alerts */
         .flash {
@@ -710,27 +746,41 @@
     </div>
 </header>
 
-<main class="wrap">
-    <!-- Header Page & Period Selector -->
-    <div class="heading">
-        <div>
-            <span class="eyebrow">Manajemen Data Iklim & Kesehatan</span>
-            <h2>Kelola Data Wilayah & Peringatan Dini</h2>
-            <p>Atur periode operasional, data angka insiden (AI), parameter iklim, dan titik observasi HTH.</p>
-        </div>
-        <form method="get" class="admin-period">
-            <label for="month">Bulan</label>
-            <select id="month" name="month" aria-label="Pilih bulan">
-                @foreach([1=>'Januari',2=>'Februari',3=>'Maret',4=>'April',5=>'Mei',6=>'Juni',7=>'Juli',8=>'Agustus',9=>'September',10=>'Oktober',11=>'November',12=>'Desember'] as $number => $monthName)
-                    <option value="{{ sprintf('%02d', $number) }}" @selected($selectedMonth === $number)>{{ $monthName }}</option>
-                @endforeach
-            </select>
-            <label for="year">Tahun</label>
-            <input id="year" name="year" type="number" min="1900" max="9999" step="1" value="{{ $selectedYear }}" aria-label="Pilih tahun">
-            <button class="btn btn-blue" type="submit">Tampilkan</button>
-        </form>
+<nav class="admin-subnav" aria-label="Navigasi Modul Panel Pengelola">
+    <div class="wrap admin-subnav-container">
+        <a href="{{ route('admin', ['tab' => 'peringatan-dini']) }}" class="subnav-item {{ $activeTab === 'peringatan-dini' ? 'is-active' : '' }}">
+            <span class="subnav-icon">⚠️</span>
+            <span class="subnav-label">Peringatan Dini</span>
+            <span class="subnav-count">{{ $earlyWarnings->count() }}</span>
+        </a>
+        <a href="{{ route('admin', ['tab' => 'pos-hth']) }}" class="subnav-item {{ $activeTab === 'pos-hth' ? 'is-active' : '' }}">
+            <span class="subnav-icon">☀️</span>
+            <span class="subnav-label">Pos Observasi HTH</span>
+            <span class="subnav-count">{{ $hthObservations->count() }}</span>
+        </a>
+        <a href="{{ route('admin', ['tab' => 'peta-dasarian']) }}" class="subnav-item {{ $activeTab === 'peta-dasarian' ? 'is-active' : '' }}">
+            <span class="subnav-icon">🗺️</span>
+            <span class="subnav-label">Peta Dasarian</span>
+            <span class="subnav-count">{{ $dasarianImages->count() }}</span>
+        </a>
+        <a href="{{ route('admin', ['tab' => 'buletin-iklim']) }}" class="subnav-item {{ $activeTab === 'buletin-iklim' ? 'is-active' : '' }}">
+            <span class="subnav-icon">📰</span>
+            <span class="subnav-label">Publikasi Buletin</span>
+            <span class="subnav-count">{{ $climateBulletins->count() }}</span>
+        </a>
+        <a href="{{ route('admin', ['tab' => 'siling-malaria']) }}" class="subnav-item {{ $activeTab === 'siling-malaria' ? 'is-active' : '' }}">
+            <span class="subnav-icon">🦟</span>
+            <span class="subnav-label">SILING Malaria</span>
+        </a>
+        <a href="{{ route('admin', ['tab' => 'notifikasi-wa']) }}" class="subnav-item {{ $activeTab === 'notifikasi-wa' ? 'is-active' : '' }}">
+            <span class="subnav-icon">📱</span>
+            <span class="subnav-label">Notifikasi WhatsApp</span>
+            <span class="subnav-count">{{ $whatsappRecipients->flatten()->count() }}</span>
+        </a>
     </div>
+</nav>
 
+<main class="wrap">
     <!-- FLASH MESSAGES -->
     @if(session('success'))
         <div class="flash">
@@ -745,27 +795,36 @@
         </div>
     @endif
 
-    <!-- QUICK NAV ANCHORS -->
-    <div class="admin-quicknav-wrap">
-        <span class="quicknav-label">Navigasi Modul:</span>
-        <nav class="admin-quicknav">
-            <a href="#kelola-peringatan-dini" class="admin-quicklink">⚠️ Peringatan Dini Iklim</a>
-            <a href="#kelola-pos-hth" class="admin-quicklink">☀️ Pos Observasi HTH</a>
-            <a href="#kelola-peta-dasarian" class="admin-quicklink">🗺️ Peta Iklim Dasarian</a>
-            <a href="#kelola-buletin-iklim" class="admin-quicklink">📰 Publikasi Buletin Iklim</a>
-            <a href="#kelola-siling-malaria" class="admin-quicklink">🦟 SILING Malaria (AI &amp; Prediksi)</a>
-            <a href="#kelola-notifikasi-wa" class="admin-quicklink">📱 Notifikasi WhatsApp</a>
-        </nav>
+    {{-- MODUL 1: PERINGATAN DINI IKLIM --}}
+    @if($activeTab === 'peringatan-dini')
+    <div class="page-heading">
+        <div>
+            <span class="eyebrow">Modul Iklim Ekstrem</span>
+            <h2>Kelola Peringatan Dini Iklim</h2>
+            <p>Atur status peringatan dini kekeringan meteorologis dan potensi curah hujan lebat per kabupaten di Provinsi Papua Selatan.</p>
+        </div>
+        @if($editingEw)
+            <a href="{{ route('admin', ['tab' => 'peringatan-dini']) }}" class="btn" style="background:#64748b; font-size:12px; height:38px; text-decoration:none;">+ Tambah Peringatan Baru</a>
+        @endif
     </div>
 
-    <!-- 1. KELOLA PERINGATAN DINI IKLIM (BARU) -->
     <section class="card" id="kelola-peringatan-dini">
         <div class="card-header-bar">
             <div>
-                <h3>Peringatan Dini Iklim (Kekeringan & Hujan Lebat)</h3>
+                <h3>Formulir Peringatan Dini Iklim</h3>
                 <p class="sub">Atur status peringatan dini per kabupaten (Awas, Siaga, Waspada, Tidak Ada Peringatan) beserta daftar kecamatan/distrik terdampak untuk peta dan tabel publik.</p>
             </div>
+            @if($editingEw)
+                <a href="{{ route('admin', ['tab' => 'peringatan-dini']) }}" class="btn" style="background:#64748b; font-size:11.5px; height:36px; text-decoration:none;">+ Tambah Peringatan Baru</a>
+            @endif
         </div>
+
+        @if($editingEw)
+            <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:var(--r-md); padding:10px 14px; margin-bottom:16px; font-size:12px; color:#1e40af; display:flex; justify-content:space-between; align-items:center;">
+                <span>Mode Edit: Mengubah peringatan <strong>{{ ucfirst(str_replace('_', ' ', $editingEw->category)) }} - Kab. {{ $editingEw->district }}</strong></span>
+                <a href="{{ route('admin', ['tab' => 'peringatan-dini']) }}" style="color:#b91c1c; font-weight:700; text-decoration:none;">Batal Edit &times;</a>
+            </div>
+        @endif
         <form method="post" novalidate action="{{ route('early-warning.store', [], false) }}" class="form" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; align-items:end;">
             @csrf
             <div class="field">
@@ -846,7 +905,7 @@
                         <td data-label="Awas">{{ $ew->awas_areas ?: '—' }}</td>
                         <td data-label="Periode"><small>{{ $ew->period }}</small></td>
                         <td data-label="Aksi" style="white-space:nowrap;">
-                            <a class="edit-link" href="{{ route('admin', ['edit_ew' => $ew->id]) }}#kelola-peringatan-dini">Edit</a>
+                            <a class="edit-link" href="{{ route('admin', ['tab' => 'peringatan-dini', 'edit_ew' => $ew->id]) }}">Edit</a>
                             <form method="post" novalidate action="{{ route('early-warning.destroy', $ew, false) }}" style="display:inline;" onsubmit="return confirm('Hapus data peringatan dini {{ $ew->category }} untuk {{ $ew->district }}?')">
                                 @csrf @method('delete')
                                 <button class="delete" type="submit">Hapus</button>
@@ -861,14 +920,37 @@
         </div>
     </section>
 
-    <!-- 2. KELOLA POS PENGAMATAN DISTRIBUSI HTH (BARU) -->
+    {{-- MODUL 2: POS OBSERVASI HTH --}}
+    @elseif($activeTab === 'pos-hth')
+    <div class="page-heading">
+        <div>
+            <span class="eyebrow">Monitoring Iklim Harian</span>
+            <h2>Kelola Pos Observasi Hari Tanpa Hujan (HTH)</h2>
+            <p>Input titik koordinat pos hujan dan jumlah Hari Tanpa Hujan (HTH) di Kabupaten Merauke, Boven Digoel, Mappi, dan Asmat.</p>
+        </div>
+        @if($editingHth)
+            <a href="{{ route('admin', ['tab' => 'pos-hth']) }}" class="btn" style="background:#64748b; font-size:12px; height:38px; text-decoration:none;">+ Tambah Pos Baru</a>
+        @endif
+    </div>
+
+    <!-- 2. KELOLA POS PENGAMATAN DISTRIBUSI HTH -->
     <section class="card" id="kelola-pos-hth">
         <div class="card-header-bar">
             <div>
-                <h3>Pos Pengamatan Distribusi HTH (Hari Tanpa Hujan)</h3>
+                <h3>Formulir Titik Pos Observasi HTH</h3>
                 <p class="sub">Input titik koordinat pos hujan dan jumlah Hari Tanpa Hujan (HTH). Skala warna ditentukan otomatis sesuai standar Klimatologi BMKG.</p>
             </div>
+            @if($editingHth)
+                <a href="{{ route('admin', ['tab' => 'pos-hth']) }}" class="btn" style="background:#64748b; font-size:11.5px; height:36px; text-decoration:none;">+ Tambah Pos Baru</a>
+            @endif
         </div>
+
+        @if($editingHth)
+            <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:var(--r-md); padding:10px 14px; margin-bottom:16px; font-size:12px; color:#1e40af; display:flex; justify-content:space-between; align-items:center;">
+                <span>Mode Edit: Mengubah pos <strong>{{ $editingHth->station_name }} (Kab. {{ $editingHth->district }})</strong></span>
+                <a href="{{ route('admin', ['tab' => 'pos-hth']) }}" style="color:#b91c1c; font-weight:700; text-decoration:none;">Batal Edit &times;</a>
+            </div>
+        @endif
         <form method="post" novalidate action="{{ route('hth-observation.store', [], false) }}" class="form" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; align-items:end;">
             @csrf
             @if($editingHth)
@@ -947,7 +1029,7 @@
                         </td>
                         <td data-label="Tanggal"><small>{{ $st->updated_date ? $st->updated_date->format('d/m/Y') : '—' }}</small></td>
                         <td data-label="Aksi" style="white-space:nowrap;">
-                            <a class="edit-link" href="{{ route('admin', ['edit_hth' => $st->id]) }}#kelola-pos-hth">Edit</a>
+                            <a class="edit-link" href="{{ route('admin', ['tab' => 'pos-hth', 'edit_hth' => $st->id]) }}">Edit</a>
                             <form method="post" novalidate action="{{ route('hth-observation.destroy', $st, false) }}" style="display:inline;" onsubmit="return confirm('Hapus pos pengamatan {{ $st->station_name }}?')">
                                 @csrf @method('delete')
                                 <button class="delete" type="submit">Hapus</button>
@@ -962,15 +1044,28 @@
         </div>
     </section>
 
-    <!-- 3. KELOLA PETA & INFORMASI IKLIM DASARIAN (BARU) -->
+    {{-- MODUL 3: PETA IKLIM DASARIAN --}}
+    @elseif($activeTab === 'peta-dasarian')
+    <div class="page-heading">
+        <div>
+            <span class="eyebrow">Publikasi Iklim 10 Harian</span>
+            <h2>Kelola Publikasi Peta Iklim Dasarian</h2>
+            <p>Unggah dan kelola peta analisis curah hujan, prakiraan deterministik, dan peluang curah hujan dasarian yang tampil di carousel dashboard utama.</p>
+        </div>
+        @if($editingDasarian)
+            <a href="{{ route('admin', ['tab' => 'peta-dasarian']) }}" class="btn" style="background:#64748b; font-size:12px; height:38px; text-decoration:none;">+ Tambah Peta Baru</a>
+        @endif
+    </div>
+
+    <!-- 3. KELOLA PETA & INFORMASI IKLIM DASARIAN -->
     <section class="card" id="kelola-peta-dasarian">
         <div class="card-header-bar">
             <div>
-                <h3>Publikasi Peta Iklim Dasarian (10 Harian)</h3>
-                <p class="sub">Unggah dan kelola peta analisis curah hujan, prakiraan deterministik, dan peluang curah hujan dasarian yang tampil di carousel dashboard utama.</p>
+                <h3>Formulir Peta Iklim Dasarian</h3>
+                <p class="sub">Unggah peta analisis curah hujan, prakiraan deterministik, atau peluang curah hujan (format JPG, PNG, WebP, SVG).</p>
             </div>
             @if($editingDasarian)
-                <a href="{{ route('admin') }}#kelola-peta-dasarian" class="btn" style="background:#64748b; font-size:11.5px; height:36px;">
+                <a href="{{ route('admin', ['tab' => 'peta-dasarian']) }}" class="btn" style="background:#64748b; font-size:11.5px; height:36px; text-decoration:none;">
                     + Tambah Peta Baru
                 </a>
             @endif
@@ -979,7 +1074,7 @@
         @if($editingDasarian)
             <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:var(--r-md); padding:10px 14px; margin-bottom:16px; font-size:12px; color:#1e40af; display:flex; justify-content:space-between; align-items:center;">
                 <span>Mode Edit: Mengubah peta <strong>{{ $editingDasarian->title }} ({{ $editingDasarian->category_label }})</strong></span>
-                <a href="{{ route('admin') }}#kelola-peta-dasarian" style="color:#b91c1c; font-weight:700; text-decoration:none;">Batal Edit &times;</a>
+                <a href="{{ route('admin', ['tab' => 'peta-dasarian']) }}" style="color:#b91c1c; font-weight:700; text-decoration:none;">Batal Edit &times;</a>
             </div>
         @endif
 
@@ -1097,7 +1192,7 @@
                             </td>
                             <td>
                                 <div style="display:flex; gap:6px; align-items:center;">
-                                    <a href="{{ route('admin', ['edit_dasarian' => $img->id]) }}#kelola-peta-dasarian" class="edit-link">Edit</a>
+                                    <a href="{{ route('admin', ['tab' => 'peta-dasarian', 'edit_dasarian' => $img->id]) }}" class="edit-link">Edit</a>
                                     <form method="post" novalidate action="{{ route('dasarian-image.destroy', $img->id, false) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus peta ini?');" style="margin:0;">
                                         @csrf
                                         @method('delete')
@@ -1117,15 +1212,28 @@
         </div>
     </section>
 
-    <!-- 4. KELOLA BULETIN INFORMASI IKLIM (BARU) -->
+    {{-- MODUL 4: BULETIN INFORMASI IKLIM --}}
+    @elseif($activeTab === 'buletin-iklim')
+    <div class="page-heading">
+        <div>
+            <span class="eyebrow">Publikasi Resmi Bulanan</span>
+            <h2>Kelola Publikasi Buletin Iklim</h2>
+            <p>Kelola edisi buletin informasi iklim bulanan/dasarian, sampul digital, dokumen PDF, ringkasan eksekutif, dan status publikasi di portal utama.</p>
+        </div>
+        @if($editingBulletin)
+            <a href="{{ route('admin', ['tab' => 'buletin-iklim']) }}" class="btn" style="background:#64748b; font-size:12px; height:38px; text-decoration:none;">+ Tambah Buletin Baru</a>
+        @endif
+    </div>
+
+    <!-- 4. KELOLA BULETIN INFORMASI IKLIM -->
     <section class="card" id="kelola-buletin-iklim">
         <div class="card-header-bar">
             <div>
-                <h3>Publikasi Buletin Iklim Papua Selatan</h3>
-                <p class="sub">Kelola edisi buletin informasi iklim bulanan/dasarian, sampul digital, dokumen PDF, ringkasan eksekutif, dan status publikasi di portal utama.</p>
+                <h3>Formulir Buletin Iklim Papua Selatan</h3>
+                <p class="sub">Unggah dokumen buletin resmi PDF dan sampul publikasi untuk arsip publik.</p>
             </div>
             @if($editingBulletin)
-                <a href="{{ route('admin') }}#kelola-buletin-iklim" class="btn" style="background:#64748b; font-size:11.5px; height:36px;">
+                <a href="{{ route('admin', ['tab' => 'buletin-iklim']) }}" class="btn" style="background:#64748b; font-size:11.5px; height:36px; text-decoration:none;">
                     + Tambah Buletin Baru
                 </a>
             @endif
@@ -1134,7 +1242,7 @@
         @if($editingBulletin)
             <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:var(--r-md); padding:10px 14px; margin-bottom:16px; font-size:12px; color:#1e40af; display:flex; justify-content:space-between; align-items:center;">
                 <span>Mode Edit: Mengubah buletin <strong>{{ $editingBulletin->title }} ({{ $editingBulletin->edition }})</strong></span>
-                <a href="{{ route('admin') }}#kelola-buletin-iklim" style="color:#b91c1c; font-weight:700; text-decoration:none;">Batal Edit &times;</a>
+                <a href="{{ route('admin', ['tab' => 'buletin-iklim']) }}" style="color:#b91c1c; font-weight:700; text-decoration:none;">Batal Edit &times;</a>
             </div>
         @endif
 
@@ -1272,7 +1380,7 @@
                             </td>
                             <td>
                                 <div style="display:flex; gap:6px; align-items:center;">
-                                    <a href="{{ route('admin', ['edit_bulletin' => $b->id]) }}#kelola-buletin-iklim" class="edit-link">Edit</a>
+                                    <a href="{{ route('admin', ['tab' => 'buletin-iklim', 'edit_bulletin' => $b->id]) }}" class="edit-link">Edit</a>
                                     <form method="post" novalidate action="{{ route('bulletin.destroy', $b->id, false) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buletin ini?');" style="margin:0;">
                                         @csrf
                                         @method('delete')
@@ -1292,7 +1400,29 @@
         </div>
     </section>
 
-    <!-- 4. INPUT ANGKA INSIDEN MALARIA (SILING MALARIA) -->
+    {{-- MODUL 5: SILING MALARIA & PARAMETER IKLIM --}}
+    @elseif($activeTab === 'siling-malaria')
+    <div class="page-heading page-heading-with-filter">
+        <div>
+            <span class="eyebrow">Sistem Informasi Iklim & Lingkungan Malaria</span>
+            <h2>Kelola Data SILING Malaria & Parameter Iklim</h2>
+            <p>Pilih periode operasional, masukkan angka insiden (AI), parameter kesesuaian iklim, dan data surveilans tren kasus malaria.</p>
+        </div>
+        <form method="get" action="{{ route('admin') }}" class="admin-period">
+            <input type="hidden" name="tab" value="siling-malaria">
+            <label for="month">Bulan</label>
+            <select id="month" name="month" aria-label="Pilih bulan">
+                @foreach([1=>'Januari',2=>'Februari',3=>'Maret',4=>'April',5=>'Mei',6=>'Juni',7=>'Juli',8=>'Agustus',9=>'September',10=>'Oktober',11=>'November',12=>'Desember'] as $number => $monthName)
+                    <option value="{{ sprintf('%02d', $number) }}" @selected($selectedMonth === $number)>{{ $monthName }}</option>
+                @endforeach
+            </select>
+            <label for="year">Tahun</label>
+            <input id="year" name="year" type="number" min="1900" max="9999" step="1" value="{{ $selectedYear }}" aria-label="Pilih tahun">
+            <button class="btn btn-blue" type="submit">Filter Periode</button>
+        </form>
+    </div>
+
+    <!-- 5. INPUT ANGKA INSIDEN MALARIA (SILING MALARIA) -->
     <section class="card" id="kelola-siling-malaria">
         <h3>Input Data Malaria</h3>
         <p class="sub">Pilih jenis data yang ingin dimasukkan. Setiap formulir menyimpan data secara terpisah untuk kabupaten dan periode yang dipilih.</p>
@@ -1478,7 +1608,7 @@
                         <tr>
                             <td data-label="Kabupaten">
                                 <strong>{{ $observation->district }}</strong>
-                                <a class="edit-link" href="{{ route('admin', ['month' => $selectedMonth, 'year' => $selectedYear, 'edit' => $observation->district], false) }}">Edit</a>
+                                <a class="edit-link" href="{{ route('admin', ['tab' => 'siling-malaria', 'month' => $selectedMonth, 'year' => $selectedYear, 'edit' => $observation->district], false) }}">Edit</a>
                             </td>
                             <td data-label="Kasus" class="value">{{ number_format($observation->cases, 0, ',', '.') }}</td>
                             <td data-label="Kelembapan">{{ $observation->humidity === null ? '—' : number_format((float) $observation->humidity, 2, ',', '.').'%' }}</td>
@@ -1492,6 +1622,16 @@
             </table>
         </div>
     </section>
+
+    {{-- MODUL 6: TEMPLATE & BROADCAST WHATSAPP NAKES --}}
+    @elseif($activeTab === 'notifikasi-wa')
+    <div class="page-heading">
+        <div>
+            <span class="eyebrow">Diseminasi & Peringatan Dini Kesehatan</span>
+            <h2>Kelola Notifikasi WhatsApp Nakes</h2>
+            <p>Konfigurasi pesan otomatis peringatan dini yang dikirim ke tenaga kesehatan (nakes) di tiap kabupaten serta kelola nomor kontak penerima.</p>
+        </div>
+    </div>
 
     <!-- 6. TEMPLATE & BROADCAST WHATSAPP NAKES -->
     <section class="card" id="kelola-notifikasi-wa">
@@ -1567,6 +1707,7 @@
             @endforelse
         </div>
     </section>
+    @endif
 
     <footer class="admin-footer">
         &copy; 2026 Badan Meteorologi, Klimatologi, dan Geofisika (BMKG) &mdash; Stasiun Klimatologi Papua Selatan. Hak Cipta Dilindungi.

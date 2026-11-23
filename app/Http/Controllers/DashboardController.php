@@ -122,7 +122,21 @@ class DashboardController extends Controller
         $editingDasarianId = request()->query('edit_dasarian');
         $editingDasarian = $editingDasarianId ? DasarianClimateImage::find($editingDasarianId) : null;
 
+        $activeTab = request()->query('tab');
+        if (! $activeTab) {
+            if ($editingEwId) $activeTab = 'peringatan-dini';
+            elseif ($editingHthId) $activeTab = 'pos-hth';
+            elseif ($editingDasarianId) $activeTab = 'peta-dasarian';
+            elseif ($editingBulletinId) $activeTab = 'buletin-iklim';
+            elseif ($editingObservation || request()->has('edit')) $activeTab = 'siling-malaria';
+            else $activeTab = 'peringatan-dini';
+        }
+        if ($activeTab === 'buletin') {
+            $activeTab = 'buletin-iklim';
+        }
+
         return view('admin', [
+            'activeTab' => $activeTab,
             'period' => $period,
             'periodLabel' => $this->periodLabel($period),
             'selectedMonth' => (int) substr($period, 5, 2),
@@ -275,7 +289,7 @@ class DashboardController extends Controller
 
         $dasarian->save();
 
-        return redirect(route('admin', [], false) . '#kelola-peta-dasarian')
+        return redirect()->route('admin', ['tab' => 'peta-dasarian'])
             ->with('success', $isEdit ? 'Peta dasarian berhasil diperbarui.' : 'Gambar informasi iklim dasarian berhasil diunggah.');
     }
 
@@ -289,7 +303,7 @@ class DashboardController extends Controller
 
         $dasarianImage->delete();
 
-        return redirect(route('admin', [], false) . '#kelola-peta-dasarian')->with('success', "Gambar {$title} berhasil dihapus.");
+        return redirect()->route('admin', ['tab' => 'peta-dasarian'])->with('success', "Gambar {$title} berhasil dihapus.");
     }
 
     public function storeWhatsappRecipient(Request $request): RedirectResponse
@@ -325,7 +339,7 @@ class DashboardController extends Controller
 
         [$year, $month] = explode('-', $validated['period']);
 
-        return redirect()->to($request->getBaseUrl().'/admin?'.http_build_query(['month' => $month, 'year' => $year]))
+        return redirect()->route('admin', ['tab' => 'notifikasi-wa', 'month' => $month, 'year' => $year])
             ->with('success', 'Kontak WhatsApp berhasil disimpan untuk '.$validated['district'].'.');
     }
 
@@ -335,7 +349,7 @@ class DashboardController extends Controller
         $recipient->delete();
         [$year, $month] = explode('-', $period);
 
-        return redirect()->to($request->getBaseUrl().'/admin?'.http_build_query(['month' => $month, 'year' => $year]))
+        return redirect()->route('admin', ['tab' => 'notifikasi-wa', 'month' => $month, 'year' => $year])
             ->with('success', 'Kontak '.$recipient->name.' berhasil dihapus.');
     }
 
@@ -353,7 +367,7 @@ class DashboardController extends Controller
 
         [$year, $month] = explode('-', $validated['period']);
 
-        return redirect()->route('admin', ['month' => $month, 'year' => $year])
+        return redirect()->route('admin', ['tab' => 'notifikasi-wa', 'month' => $month, 'year' => $year])
             ->with('success', 'Template pesan WhatsApp berhasil disimpan.');
     }
 
@@ -380,7 +394,7 @@ class DashboardController extends Controller
 
         [$year, $month] = explode('-', $validated['period']);
 
-        return redirect()->route('admin', ['month' => $month, 'year' => $year])
+        return redirect()->route('admin', ['tab' => 'siling-malaria', 'month' => $month, 'year' => $year])
             ->with('success', 'Data tren malaria berhasil disimpan untuk '.$this->periodLabel($validated['period']).'.');
     }
 
@@ -400,6 +414,7 @@ class DashboardController extends Controller
         [$year, $month] = explode('-', $validated['period']);
 
         return redirect()->route('admin', [
+            'tab' => 'siling-malaria',
             'month' => $month,
             'year' => $year,
         ])->with('success', 'Angka insiden berhasil disimpan untuk '.$this->periodLabel($validated['period']).'.');
@@ -426,7 +441,7 @@ class DashboardController extends Controller
 
         [$year, $month] = explode('-', $validated['period']);
 
-        return redirect()->route('admin', ['month' => $month, 'year' => $year])
+        return redirect()->route('admin', ['tab' => 'siling-malaria', 'month' => $month, 'year' => $year])
             ->with('success', 'Data kesesuaian iklim malaria berhasil disimpan untuk '.$validated['district'].'.');
     }
 
@@ -437,6 +452,7 @@ class DashboardController extends Controller
         [$year, $month] = explode('-', $incident->period);
 
         return redirect()->route('admin', [
+            'tab' => 'siling-malaria',
             'month' => $month,
             'year' => $year,
         ])->with('success', 'Data kabupaten berhasil dihapus.');
@@ -502,7 +518,7 @@ class DashboardController extends Controller
 
         $bulletin->save();
 
-        return redirect()->to(route('admin') . '?tab=buletin#buletin')->with('success', 'Data Buletin Iklim (' . $bulletin->edition . ') berhasil disimpan.');
+        return redirect()->route('admin', ['tab' => 'buletin-iklim'])->with('success', 'Data Buletin Iklim (' . $bulletin->edition . ') berhasil disimpan.');
     }
 
     public function destroyBulletin(ClimateBulletin $bulletin): RedirectResponse
@@ -519,7 +535,7 @@ class DashboardController extends Controller
 
         $bulletin->delete();
 
-        return redirect()->to(route('admin') . '?tab=buletin#buletin')->with('success', 'Buletin ' . $edition . ' berhasil dihapus.');
+        return redirect()->route('admin', ['tab' => 'buletin-iklim'])->with('success', 'Buletin ' . $edition . ' berhasil dihapus.');
     }
 
     private function adminPeriod(): string
