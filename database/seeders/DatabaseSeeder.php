@@ -22,6 +22,14 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        \App\Models\User::updateOrCreate(
+            ['email' => 'pentest@bmkg.go.id'],
+            [
+                'name' => 'Akun Pentest BMKG',
+                'password' => \Illuminate\Support\Facades\Hash::make('pentest123!'),
+            ]
+        );
+
         \App\Models\ClimateBulletin::updateOrCreate(
             ['edition' => 'Edisi November 2026'],
             [
