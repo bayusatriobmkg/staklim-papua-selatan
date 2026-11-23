@@ -66,25 +66,32 @@
             font-family: inherit;
         }
 
-        /* Topbar */
+        /* Topbar Header */
         .admin-topbar {
-            height: 74px;
+            min-height: 72px;
             background: #ffffff;
-            border-bottom: 2px solid #e0e9f1;
-            box-shadow: var(--shadow-sm);
+            border-bottom: 1.5px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 43, 73, 0.04);
             display: flex;
             align-items: center;
-            padding: 0 clamp(16px, 4vw, 48px);
+            justify-content: space-between;
+            padding: 10px clamp(16px, 4vw, 40px);
             gap: 16px;
             position: sticky;
             top: 0;
-            z-index: 50;
+            z-index: 100;
+        }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
         }
         .topbar-mark {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             object-fit: contain;
-            flex: none;
+            flex-shrink: 0;
         }
         .topbar-brand {
             display: flex;
@@ -98,6 +105,13 @@
             letter-spacing: .08em;
             color: var(--bmkg-blue);
             text-transform: uppercase;
+            line-height: 1.2;
+        }
+        .topbar-title-wrap {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .topbar-title {
             font-size: 15px;
@@ -106,44 +120,122 @@
             letter-spacing: -.01em;
             line-height: 1.2;
             margin: 0;
+            white-space: nowrap;
         }
         .topbar-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            margin-left: 10px;
-            background: var(--bmkg-blue-light);
-            color: var(--bmkg-blue-dark);
+            gap: 5px;
+            background: #e0f2fe;
+            color: #0369a1;
             border: 1px solid #bae6fd;
-            padding: 3px 9px;
-            border-radius: 20px;
-            font-size: 10.5px;
-            font-weight: 800;
-            letter-spacing: .04em;
+            padding: 2.5px 8.5px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .02em;
         }
         .topbar-badge-dot {
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: var(--bmkg-blue);
+            background: #0284c7;
+            box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.25);
         }
-        .topbar-nav {
+
+        /* Topbar Right Actions */
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
             margin-left: auto;
+        }
+        .topbar-user {
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            padding: 6px 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--r-md);
+            font-size: 12px;
+            color: var(--ink-secondary);
+        }
+        .topbar-user-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--bmkg-blue-light);
+            color: var(--bmkg-blue-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
+        }
+        .topbar-user-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+            text-align: left;
+        }
+        .topbar-user-name {
+            font-weight: 700;
+            color: var(--bmkg-navy);
+            font-size: 12px;
+        }
+        .topbar-user-role {
+            font-size: 10.5px;
+            color: var(--muted);
+        }
+        .topbar-divider {
+            width: 1px;
+            height: 26px;
+            background: #e2e8f0;
+        }
+        .btn-topbar-portal {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            height: 38px;
+            padding: 0 14px;
             background: var(--bmkg-navy);
             color: #ffffff;
+            font-size: 12.5px;
             font-weight: 700;
             text-decoration: none;
-            font-size: 12px;
-            padding: 9px 16px;
             border-radius: var(--r-md);
+            border: none;
             transition: all .2s ease;
-            box-shadow: 0 2px 8px rgba(0, 43, 73, 0.2);
+            box-shadow: 0 2px 6px rgba(0, 43, 73, 0.15);
         }
-        .topbar-nav:hover {
+        .btn-topbar-portal:hover {
             background: var(--bmkg-blue-dark);
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 43, 73, 0.25);
+        }
+        .btn-topbar-logout {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            height: 38px;
+            padding: 0 13px;
+            background: #fff1f2;
+            color: #be123c;
+            border: 1.5px solid #fecdd3;
+            border-radius: var(--r-md);
+            font-size: 12.5px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+        .btn-topbar-logout:hover {
+            background: #ffe4e6;
+            border-color: #fda4af;
+            color: #9f1239;
             transform: translateY(-1px);
         }
 
@@ -366,20 +458,46 @@
             color: var(--bmkg-blue-dark);
         }
 
-        .admin-quicklink {
-            padding: 8px 14px;
+        .admin-quicknav-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding: 10px 16px;
             background: #ffffff;
+            border: 1.5px solid var(--line);
+            border-radius: var(--r-md);
+            box-shadow: 0 1px 4px rgba(0, 43, 73, 0.04);
+            overflow-x: auto;
+        }
+        .quicknav-label {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            white-space: nowrap;
+        }
+        .admin-quicknav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .admin-quicklink {
+            padding: 7px 13px;
+            background: #f8fafc;
             border: 1px solid var(--line);
             border-radius: 999px;
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 700;
             color: var(--bmkg-navy);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            transition: all .2s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            white-space: nowrap;
+            transition: all .2s ease;
         }
         .admin-quicklink:hover {
             background: var(--bmkg-blue-light);
@@ -524,9 +642,12 @@
             .suitability-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
             .suitability-form .btn { grid-column: 1 / -1; width: 100%; }
         }
-        @media (max-width: 640px) {
-            .admin-topbar { height: auto; padding: 12px 16px; flex-wrap: wrap; }
-            .topbar-nav { width: 100%; justify-content: center; }
+        @media (max-width: 768px) {
+            .admin-topbar { height: auto; min-height: 64px; padding: 12px 16px; flex-wrap: wrap; }
+            .topbar-left { width: 100%; }
+            .topbar-right { width: 100%; justify-content: flex-end; flex-wrap: wrap; margin-top: 6px; }
+            .topbar-user-info { display: none; }
+            .btn-topbar-portal, .btn-topbar-logout { height: 34px; padding: 0 10px; font-size: 11.5px; }
             .heading { display: block; }
             .admin-period { margin-top: 14px; flex-wrap: wrap; width: 100%; }
             .admin-period input { width: 90px; }
@@ -548,21 +669,42 @@
 <body>
 
 <header class="admin-topbar">
-    <img class="topbar-mark" src="{{ asset('images/logo-bmkg-transparent.png') }}" alt="Logo BMKG">
-    <div class="topbar-brand">
-        <span class="topbar-institution">Badan Meteorologi, Klimatologi, dan Geofisika</span>
-        <h1 class="topbar-title">Stasiun Klimatologi Papua Selatan <span class="topbar-badge"><span class="topbar-badge-dot"></span> Panel Pengelola</span></h1>
+    <div class="topbar-left">
+        <img class="topbar-mark" src="{{ asset('images/logo-bmkg-transparent.png') }}" alt="Logo BMKG">
+        <div class="topbar-brand">
+            <span class="topbar-institution">Badan Meteorologi, Klimatologi, dan Geofisika</span>
+            <div class="topbar-title-wrap">
+                <h1 class="topbar-title">Stasiun Klimatologi Papua Selatan</h1>
+                <span class="topbar-badge"><span class="topbar-badge-dot"></span> Panel Pengelola</span>
+            </div>
+        </div>
     </div>
-    <div style="display:flex; align-items:center; gap:8px;">
-        <a class="topbar-nav" href="{{ route('dashboard') }}">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            Kembali ke Portal Publik
+
+    <div class="topbar-right">
+        @auth
+            <div class="topbar-user" title="{{ auth()->user()->email ?? 'Pengelola' }}">
+                <div class="topbar-user-avatar">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <div class="topbar-user-info">
+                    <span class="topbar-user-name">{{ auth()->user()->name ?? 'Admin Staklim' }}</span>
+                    <span class="topbar-user-role">{{ auth()->user()->email ?? 'Petugas BMKG' }}</span>
+                </div>
+            </div>
+        @endauth
+
+        <div class="topbar-divider"></div>
+
+        <a class="btn-topbar-portal" href="{{ route('dashboard') }}" title="Lihat Tampilan Portal Publik">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>Portal Publik</span>
         </a>
+
         <form method="post" action="{{ route('logout') }}" style="margin:0;">
             @csrf
-            <button type="submit" class="topbar-nav" style="border:1px solid #fecaca; background:#fff1f2; color:#b91c1c; cursor:pointer;" title="Keluar dari sesi admin">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                Keluar
+            <button type="submit" class="btn-topbar-logout" title="Keluar dari sesi admin">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                <span>Keluar</span>
             </button>
         </form>
     </div>
@@ -604,14 +746,17 @@
     @endif
 
     <!-- QUICK NAV ANCHORS -->
-    <nav class="admin-quicknav" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px;">
-        <a href="#kelola-peringatan-dini" class="admin-quicklink">⚠️ Peringatan Dini Iklim</a>
-        <a href="#kelola-pos-hth" class="admin-quicklink">☀️ Pos Observasi HTH</a>
-        <a href="#kelola-peta-dasarian" class="admin-quicklink">🗺️ Peta Iklim Dasarian</a>
-        <a href="#kelola-buletin-iklim" class="admin-quicklink">📰 Publikasi Buletin Iklim</a>
-        <a href="#kelola-siling-malaria" class="admin-quicklink">🦟 SILING Malaria (AI &amp; Prediksi)</a>
-        <a href="#kelola-notifikasi-wa" class="admin-quicklink">📱 Notifikasi WhatsApp Nakes</a>
-    </nav>
+    <div class="admin-quicknav-wrap">
+        <span class="quicknav-label">Navigasi Modul:</span>
+        <nav class="admin-quicknav">
+            <a href="#kelola-peringatan-dini" class="admin-quicklink">⚠️ Peringatan Dini Iklim</a>
+            <a href="#kelola-pos-hth" class="admin-quicklink">☀️ Pos Observasi HTH</a>
+            <a href="#kelola-peta-dasarian" class="admin-quicklink">🗺️ Peta Iklim Dasarian</a>
+            <a href="#kelola-buletin-iklim" class="admin-quicklink">📰 Publikasi Buletin Iklim</a>
+            <a href="#kelola-siling-malaria" class="admin-quicklink">🦟 SILING Malaria (AI &amp; Prediksi)</a>
+            <a href="#kelola-notifikasi-wa" class="admin-quicklink">📱 Notifikasi WhatsApp</a>
+        </nav>
+    </div>
 
     <!-- 1. KELOLA PERINGATAN DINI IKLIM (BARU) -->
     <section class="card" id="kelola-peringatan-dini">
