@@ -3381,10 +3381,6 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                 <span>Kontak Kami</span>
             </a>
-            <a href="{{ route('admin') }}" class="nav-admin-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                <span>Panel Admin</span>
-            </a>
         </nav>
     </div>
 </header>
@@ -4452,7 +4448,7 @@
             <div class="panel-heading"><div><h3>Tren malaria dan iklim bulanan</h3><p>Data per kabupaten · 2021–2026</p></div><select id="trend-metric" class="trend-select" aria-label="Pilih indikator grafik"><option value="cases">Jumlah kasus</option><option value="humidity">Kelembapan (%)</option><option value="temperature">Suhu (°C)</option><option value="rainfall">Curah hujan (mm)</option></select></div>
             <div class="trend-scroll"><svg id="malaria-trend-chart" class="trend-chart" viewBox="0 0 960 360" role="img" aria-label="Grafik tren malaria dan iklim bulanan per kabupaten"></svg></div>
             <div class="trend-legend" aria-label="Legenda kabupaten"><span class="trend-key"><i style="background:#087e79"></i>Asmat</span><span class="trend-key"><i style="background:#3974c6"></i>Boven Digoel</span><span class="trend-key"><i style="background:#e2a21b"></i>Mappi</span><span class="trend-key"><i style="background:#c94f48"></i>Merauke</span></div>
-            <p class="trend-note">Pilih indikator untuk melihat tren. Data dapat diperbarui melalui panel admin.</p>
+            <p class="trend-note">Pilih indikator untuk melihat grafik tren data malaria dan parameter iklim bulanan.</p>
         </section>
     </div>
     @endif
@@ -4482,7 +4478,6 @@
                 <a href="{{ route('services') }}">Layanan Publik (PTSP)</a>
                 <a href="{{ route('products') }}">Produk Iklim</a>
                 <a href="{{ route('contact') }}">Kontak Kami</a>
-                <a href="{{ route('admin') }}">Panel Pengelola Admin</a>
             </div>
         </div>
         <div>
