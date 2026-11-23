@@ -598,6 +598,7 @@
     <nav class="admin-quicknav" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px;">
         <a href="#kelola-peringatan-dini" class="admin-quicklink">⚠️ Peringatan Dini Iklim</a>
         <a href="#kelola-pos-hth" class="admin-quicklink">☀️ Pos Observasi HTH</a>
+        <a href="#kelola-peta-dasarian" class="admin-quicklink">🗺️ Peta Iklim Dasarian</a>
         <a href="#kelola-buletin-iklim" class="admin-quicklink">📰 Publikasi Buletin Iklim</a>
         <a href="#kelola-siling-malaria" class="admin-quicklink">🦟 SILING Malaria (AI &amp; Prediksi)</a>
         <a href="#kelola-notifikasi-wa" class="admin-quicklink">📱 Notifikasi WhatsApp Nakes</a>
@@ -807,7 +808,162 @@
         </div>
     </section>
 
-    <!-- 3. KELOLA BULETIN INFORMASI IKLIM (BARU) -->
+    <!-- 3. KELOLA PETA & INFORMASI IKLIM DASARIAN (BARU) -->
+    <section class="card" id="kelola-peta-dasarian">
+        <div class="card-header-bar">
+            <div>
+                <h3>Publikasi Peta Iklim Dasarian (10 Harian)</h3>
+                <p class="sub">Unggah dan kelola peta analisis curah hujan, prakiraan deterministik, dan peluang curah hujan dasarian yang tampil di carousel dashboard utama.</p>
+            </div>
+            @if($editingDasarian)
+                <a href="{{ route('admin') }}#kelola-peta-dasarian" class="btn" style="background:#64748b; font-size:11.5px; height:36px;">
+                    + Tambah Peta Baru
+                </a>
+            @endif
+        </div>
+
+        @if($editingDasarian)
+            <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:var(--r-md); padding:10px 14px; margin-bottom:16px; font-size:12px; color:#1e40af; display:flex; justify-content:space-between; align-items:center;">
+                <span>Mode Edit: Mengubah peta <strong>{{ $editingDasarian->title }} ({{ $editingDasarian->category_label }})</strong></span>
+                <a href="{{ route('admin') }}#kelola-peta-dasarian" style="color:#b91c1c; font-weight:700; text-decoration:none;">Batal Edit &times;</a>
+            </div>
+        @endif
+
+        <form method="post" novalidate action="{{ route('dasarian-image.store', [], false) }}" enctype="multipart/form-data" class="form" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; align-items:start;">
+            @csrf
+            @if($editingDasarian)
+                <input type="hidden" name="id" value="{{ $editingDasarian->id }}">
+            @endif
+
+            <div class="field">
+                <label for="dasarian_category">Kategori Peta *</label>
+                <select id="dasarian_category" name="category" required>
+                    <option value="analisis" @selected(old('category', $editingDasarian?->category) === 'analisis')>Analisis Curah Hujan</option>
+                    <option value="prediksi" @selected(old('category', $editingDasarian?->category) === 'prediksi')>Prediksi Curah Hujan</option>
+                    <option value="peluang" @selected(old('category', $editingDasarian?->category) === 'peluang')>Peluang Curah Hujan</option>
+                    <option value="lainnya" @selected(old('category', $editingDasarian?->category) === 'lainnya')>Informasi Dasarian Lainnya</option>
+                </select>
+            </div>
+
+            <div class="field" style="grid-column: span 2;">
+                <label for="dasarian_title">Judul Peta *</label>
+                <input id="dasarian_title" name="title" type="text" required placeholder="Contoh: Analisis Curah Hujan Dasarian I November 2026" value="{{ old('title', $editingDasarian?->title) }}">
+            </div>
+
+            <div class="field">
+                <label for="dasarian_period_label">Label Periode Dasarian</label>
+                <input id="dasarian_period_label" name="period_label" type="text" placeholder="Contoh: Dasarian I November 2026" value="{{ old('period_label', $editingDasarian?->period_label) }}">
+            </div>
+
+            <div class="field">
+                <label for="dasarian_order">Urutan Slide (Angka kecil tampil lebih dulu)</label>
+                <input id="dasarian_order" name="order" type="number" min="0" max="999" value="{{ old('order', $editingDasarian?->order ?? 0) }}">
+            </div>
+
+            <div class="field" style="grid-column: span 2;">
+                <label for="dasarian_image">Berkas Gambar Peta (JPG, PNG, WebP, SVG maks 5 MB) {{ $editingDasarian ? '(Kosongkan jika tidak ganti gambar)' : '*' }}</label>
+                <input id="dasarian_image" name="image" type="file" accept="image/jpeg,image/png,image/jpg,image/webp,image/svg+xml" {{ $editingDasarian ? '' : 'required' }}>
+                <small style="color:var(--muted); font-size:11px; margin-top:3px; display:block;">
+                    Disarankan rasio A4 Lanskap (1024 x 724 px) agar pas sempurna di carousel dashboard.
+                    @if($editingDasarian && $editingDasarian->image_path)
+                        <br>Gambar saat ini: <a href="{{ asset($editingDasarian->image_path) }}" target="_blank" rel="noopener">Lihat gambar</a>
+                    @endif
+                </small>
+            </div>
+
+            <div class="field" style="grid-column: 1 / -1;">
+                <label for="dasarian_description">Deskripsi / Keterangan Peta</label>
+                <textarea id="dasarian_description" name="description" rows="2" placeholder="Keterangan sebaran curah hujan, intensitas, sifat hujan, atau catatan analisis dasarian...">{{ old('description', $editingDasarian?->description) }}</textarea>
+            </div>
+
+            <div class="field" style="grid-column: 1 / -1; display:flex; align-items:center; gap:8px;">
+                <input type="checkbox" id="dasarian_is_active" name="is_active" value="1" style="width:18px; height:18px;" @checked(old('is_active', $editingDasarian ? $editingDasarian->is_active : true))>
+                <label for="dasarian_is_active" style="font-weight:700; margin:0; cursor:pointer;">
+                    Tampilkan di Carousel Publik (Centang agar peta aktif dan tampil di halaman depan)
+                </label>
+            </div>
+
+            <div style="grid-column: 1 / -1; display:flex; gap:10px; margin-top:6px;">
+                <button class="btn btn-blue" type="submit">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    {{ $editingDasarian ? 'Perbarui Peta Dasarian' : 'Simpan & Publikasikan Peta' }}
+                </button>
+                @if($editingDasarian)
+                    <a href="{{ route('admin') }}#kelola-peta-dasarian" class="btn" style="background:#e2e8f0; color:#334155; text-decoration:none;">Batal</a>
+                @endif
+            </div>
+        </form>
+
+        <div style="margin-top:24px;">
+            <div style="font-size:13px; font-weight:700; color:var(--bmkg-navy); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                <span>Daftar Peta Informasi Iklim Dasarian ({{ $dasarianImages->count() }} Peta)</span>
+            </div>
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width:80px;">Pratinjau</th>
+                            <th>Kategori</th>
+                            <th>Judul &amp; Periode</th>
+                            <th>Deskripsi</th>
+                            <th style="width:60px; text-align:center;">Urutan</th>
+                            <th style="width:70px; text-align:center;">Status</th>
+                            <th style="width:130px;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($dasarianImages as $img)
+                        <tr>
+                            <td>
+                                <a href="{{ asset($img->image_path) }}" target="_blank" rel="noopener" title="Lihat Peta Resolusi Penuh">
+                                    <img src="{{ asset($img->image_path) }}" alt="{{ $img->title }}" style="width:72px; height:50px; object-fit:cover; border-radius:4px; border:1px solid #cbd5e1; box-shadow:0 1px 3px rgba(0,0,0,0.1); display:block;">
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge" style="background: {{ $img->category_color }}18; color: {{ $img->category_color }}; border: 1px solid {{ $img->category_color }}40; font-size:11px; font-weight:700; white-space:nowrap;">
+                                    {{ $img->category_label }}
+                                </span>
+                            </td>
+                            <td>
+                                <strong style="color:var(--bmkg-navy); font-size:13px; display:block;">{{ $img->title }}</strong>
+                                @if($img->period_label)
+                                    <span style="display:inline-block; margin-top:2px; font-size:11.5px; color:#0369a1; background:#e0f2fe; padding:1px 6px; border-radius:4px;">{{ $img->period_label }}</span>
+                                @endif
+                            </td>
+                            <td style="font-size:12px; color:var(--muted); max-width:240px;">
+                                {{ $img->description ?: '-' }}
+                            </td>
+                            <td style="text-align:center; font-weight:700; font-size:12px;">{{ $img->order }}</td>
+                            <td style="text-align:center;">
+                                @if($img->is_active)
+                                    <span class="badge" style="background:#dcfce7; color:#15803d; border:1px solid #86efac; font-size:10px;">Aktif</span>
+                                @else
+                                    <span class="badge" style="background:#f1f5f9; color:#64748b; border:1px solid #cbd5e1; font-size:10px;">Nonaktif</span>
+                                @endif
+                            </td>
+                            <td>
+                                <div style="display:flex; gap:6px; align-items:center;">
+                                    <a href="{{ route('admin', ['edit_dasarian' => $img->id]) }}#kelola-peta-dasarian" class="edit-link">Edit</a>
+                                    <form method="post" novalidate action="{{ route('dasarian-image.destroy', $img->id, false) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus peta ini?');" style="margin:0;">
+                                        @csrf
+                                        @method('delete')
+                                        <button class="delete" type="submit">Hapus</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="7" class="empty">Belum ada peta dasarian yang diunggah. Silakan gunakan formulir di atas untuk mengunggah peta analisis/prakiraan.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. KELOLA BULETIN INFORMASI IKLIM (BARU) -->
     <section class="card" id="kelola-buletin-iklim">
         <div class="card-header-bar">
             <div>

@@ -119,6 +119,8 @@ class DashboardController extends Controller
         $editingEw = $editingEwId ? ClimateEarlyWarning::find($editingEwId) : null;
         $editingBulletinId = request()->query('edit_bulletin');
         $editingBulletin = $editingBulletinId ? ClimateBulletin::find($editingBulletinId) : null;
+        $editingDasarianId = request()->query('edit_dasarian');
+        $editingDasarian = $editingDasarianId ? DasarianClimateImage::find($editingDasarianId) : null;
 
         return view('admin', [
             'period' => $period,
@@ -139,6 +141,7 @@ class DashboardController extends Controller
             'editingHth' => $editingHth,
             'editingEw' => $editingEw,
             'dasarianImages' => DasarianClimateImage::orderBy('order')->orderBy('id', 'desc')->get(),
+            'editingDasarian' => $editingDasarian,
             'climateBulletins' => ClimateBulletin::orderBy('order')->orderBy('release_date', 'desc')->get(),
             'editingBulletin' => $editingBulletin,
         ]);
@@ -234,30 +237,46 @@ class DashboardController extends Controller
 
     public function storeDasarianImage(Request $request): RedirectResponse
     {
+        $isEdit = $request->filled('id');
         $validated = $request->validate([
+            'id' => ['nullable', 'integer', 'exists:dasarian_climate_images,id'],
             'category' => ['required', 'string', 'in:analisis,prediksi,peluang,lainnya'],
             'title' => ['required', 'string', 'max:255'],
             'period_label' => ['nullable', 'string', 'max:100'],
             'description' => ['nullable', 'string', 'max:500'],
             'order' => ['nullable', 'integer', 'min:0', 'max:999'],
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:5120'],
+            'is_active' => ['nullable'],
+            'image' => [$isEdit ? 'nullable' : 'required', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:5120'],
         ]);
 
-        $imageFile = $request->file('image');
-        $fileName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $imageFile->getClientOriginalName());
-        $imageFile->move(public_path('uploads/dasarian'), $fileName);
+        $dasarian = $isEdit ? DasarianClimateImage::findOrFail($validated['id']) : new DasarianClimateImage();
 
-        DasarianClimateImage::create([
-            'category' => $validated['category'],
-            'title' => trim($validated['title']),
-            'period_label' => $validated['period_label'] ? trim($validated['period_label']) : null,
-            'description' => $validated['description'] ? trim($validated['description']) : null,
-            'order' => $validated['order'] ?? 0,
-            'image_path' => 'uploads/dasarian/' . $fileName,
-            'is_active' => true,
-        ]);
+        $dasarian->category = $validated['category'];
+        $dasarian->title = trim($validated['title']);
+        $dasarian->period_label = $validated['period_label'] ? trim($validated['period_label']) : null;
+        $dasarian->description = $validated['description'] ? trim($validated['description']) : null;
+        $dasarian->order = $validated['order'] ?? 0;
+        $dasarian->is_active = $request->boolean('is_active', true);
 
-        return back()->with('success', 'Gambar informasi iklim dasarian berhasil diunggah.');
+        if ($request->hasFile('image')) {
+            $imageFile = $request->file('image');
+            $fileName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $imageFile->getClientOriginalName());
+            $imageFile->move(public_path('uploads/dasarian'), $fileName);
+
+            if ($isEdit && $dasarian->image_path) {
+                $oldPath = public_path($dasarian->image_path);
+                if (file_exists($oldPath) && !str_contains($dasarian->image_path, 'analisis-curah-hujan-dasarian.svg') && !str_contains($dasarian->image_path, 'prediksi-curah-hujan-dasarian.svg') && !str_contains($dasarian->image_path, 'peluang-curah-hujan-dasarian.svg')) {
+                    @unlink($oldPath);
+                }
+            }
+
+            $dasarian->image_path = 'uploads/dasarian/' . $fileName;
+        }
+
+        $dasarian->save();
+
+        return redirect(route('admin', [], false) . '#kelola-peta-dasarian')
+            ->with('success', $isEdit ? 'Peta dasarian berhasil diperbarui.' : 'Gambar informasi iklim dasarian berhasil diunggah.');
     }
 
     public function destroyDasarianImage(DasarianClimateImage $dasarianImage): RedirectResponse
@@ -270,7 +289,7 @@ class DashboardController extends Controller
 
         $dasarianImage->delete();
 
-        return back()->with('success', "Gambar {$title} berhasil dihapus.");
+        return redirect(route('admin', [], false) . '#kelola-peta-dasarian')->with('success', "Gambar {$title} berhasil dihapus.");
     }
 
     public function storeWhatsappRecipient(Request $request): RedirectResponse
