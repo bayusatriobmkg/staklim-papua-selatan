@@ -4006,10 +4006,10 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                     </div>
                     <h3>Email Resmi</h3>
-                    <p>staklim.merauke@gmail.com</p>
+                    <p>staklim.merauke@bmkg.go.id</p>
                 </div>
                 <div class="contact-card-actions">
-                    <a href="mailto:staklim.merauke@gmail.com?subject=Permohonan%20Informasi%20BMKG%20Papua%20Selatan" class="pill-action-btn btn-email">
+                    <a href="mailto:staklim.merauke@bmkg.go.id?subject=Permohonan%20Informasi%20BMKG%20Papua%20Selatan" class="pill-action-btn btn-email">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                         Kirim Email
                     </a>
@@ -4160,7 +4160,7 @@
                         <span class="faq-icon">+</span>
                     </button>
                     <div class="faq-answer">
-                        Sekolah atau instansi dapat mengirimkan surat permohonan kunjungan resmi yang dialamatkan kepada Kepala Stasiun Klimatologi Papua Selatan via email resmi (<strong>staklim.merauke@gmail.com</strong>) minimal 7 hari kerja sebelum tanggal kunjungan yang dikehendaki.
+                        Sekolah atau instansi dapat mengirimkan surat permohonan kunjungan resmi yang dialamatkan kepada Kepala Stasiun Klimatologi Papua Selatan via email resmi (<strong>staklim.merauke@bmkg.go.id</strong>) minimal 7 hari kerja sebelum tanggal kunjungan yang dikehendaki.
                     </div>
                 </div>
             </div>
@@ -4485,7 +4485,7 @@
             <div class="footer-contact">
                 <div><strong>Alamat:</strong> Jl. Poros Semangga–Tanah Miring, SP 2, Merauke</div>
                 <div><strong>Telepon:</strong> <a href="tel:+628114908182">0811-4908-182</a></div>
-                <div><strong>Email:</strong> <a href="mailto:staklim.merauke@gmail.com">staklim.merauke@gmail.com</a></div>
+                <div><strong>Email:</strong> <a href="mailto:staklim.merauke@bmkg.go.id">staklim.merauke@bmkg.go.id</a></div>
                 <div style="margin-top:4px;">
                     <span class="footer-badge">Call Center BMKG 196</span>
                 </div>

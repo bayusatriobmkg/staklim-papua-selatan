@@ -14,13 +14,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\User::updateOrCreate(
-            ['email' => 'staklim.merauke@gmail.com'],
-            [
+        $existingAdmin = \App\Models\User::where('email', 'staklim.merauke@gmail.com')->first();
+        if ($existingAdmin) {
+            $existingAdmin->update([
+                'email' => 'staklim.merauke@bmkg.go.id',
                 'name' => 'Admin Stasiun Klimatologi Papua Selatan',
                 'password' => \Illuminate\Support\Facades\Hash::make('admin123'),
-            ]
-        );
+            ]);
+        } else {
+            \App\Models\User::updateOrCreate(
+                ['email' => 'staklim.merauke@bmkg.go.id'],
+                [
+                    'name' => 'Admin Stasiun Klimatologi Papua Selatan',
+                    'password' => \Illuminate\Support\Facades\Hash::make('admin123'),
+                ]
+            );
+        }
 
         \App\Models\User::updateOrCreate(
             ['email' => 'pentest@bmkg.go.id'],

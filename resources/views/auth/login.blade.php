@@ -368,7 +368,7 @@
                         <span class="input-icon">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                         </span>
-                        <input id="email" type="email" name="email" class="{{ $emailClass ?? 'form-input' }}" value="{{ $emailValue ?? old('email', 'staklim.merauke@gmail.com') }}" required @if(!empty($emailAutofocus)) autofocus @endif placeholder="staklim.merauke@gmail.com">
+                        <input id="email" type="email" name="email" class="{{ $emailClass ?? 'form-input' }}" value="{{ $emailValue ?? old('email', 'staklim.merauke@bmkg.go.id') }}" required @if(!empty($emailAutofocus)) autofocus @endif placeholder="staklim.merauke@bmkg.go.id">
                     </div>
                 </div>
 

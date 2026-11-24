@@ -40,7 +40,7 @@ class AuthController extends Controller
 
         return view('auth.login', [
             'loginAlert' => self::ALERTS[$errorKey] ?? null,
-            'emailValue' => old('email', $request->query('email', 'staklim.merauke@gmail.com')),
+            'emailValue' => old('email', $request->query('email', 'staklim.merauke@bmkg.go.id')),
             'emailClass' => 'form-input'.(in_array($errorKey, ['password', 'akun'], true) ? ' is-invalid' : ''),
             'passwordClass' => 'form-input'.($highlightPassword ? ' is-invalid' : ''),
             'emailAutofocus' => ! $highlightPassword,
