@@ -81,7 +81,7 @@ class DashboardController extends Controller
             $data['hthObservations'] = HthObservation::orderBy('days', 'desc')->orderBy('district')->orderBy('station_name')->get();
             $data['districts'] = self::DISTRICTS;
             $data['dasarianImages'] = DasarianClimateImage::where('is_active', true)->orderBy('order')->orderBy('id', 'desc')->get();
-            $data['climateBulletins'] = ClimateBulletin::where('is_published', true)->orderBy('order')->orderBy('release_date', 'desc')->get();
+            $data['climateBulletins'] = ClimateBulletin::where('is_published', true)->where(function($q) { $q->where('category', 'iklim')->orWhereNull('category'); })->orderBy('order')->orderBy('release_date', 'desc')->get();
             $data['latestBulletin'] = $data['climateBulletins']->first();
             return view('welcome', $data);
         }
@@ -91,6 +91,9 @@ class DashboardController extends Controller
         $period = request()->query('period', array_key_first($periodOptions));
         if (! array_key_exists($period, $periodOptions)) $period = array_key_first($periodOptions);
 
+        $malariaBulletins = ClimateBulletin::where('is_published', true)->where('category', 'malaria')->orderBy('order')->orderBy('release_date', 'desc')->get();
+        $latestMalariaBulletin = $malariaBulletins->first();
+
         return view('welcome', array_merge($data, [
             'period' => $period,
             'periodLabel' => $this->periodLabel($period),
@@ -98,6 +101,8 @@ class DashboardController extends Controller
             'records' => Incident::where('period', $period)->orderBy('district')->get(),
             'climateSuitabilities' => ClimateSuitability::where('period', $period)->orderBy('district')->get(),
             'malariaHistory' => MalariaObservation::orderBy('period')->orderBy('district')->get(),
+            'malariaBulletins' => $malariaBulletins,
+            'latestMalariaBulletin' => $latestMalariaBulletin,
         ]));
     }
 
@@ -157,6 +162,8 @@ class DashboardController extends Controller
             'dasarianImages' => DasarianClimateImage::orderBy('order')->orderBy('id', 'desc')->get(),
             'editingDasarian' => $editingDasarian,
             'climateBulletins' => ClimateBulletin::orderBy('order')->orderBy('release_date', 'desc')->get(),
+            'malariaBulletins' => ClimateBulletin::where('category', 'malaria')->orderBy('order')->orderBy('release_date', 'desc')->get(),
+            'latestMalariaBulletin' => ClimateBulletin::where('category', 'malaria')->orderBy('order')->orderBy('release_date', 'desc')->first(),
             'editingBulletin' => $editingBulletin,
         ]);
     }
@@ -275,7 +282,7 @@ class DashboardController extends Controller
         if ($request->hasFile('image')) {
             $imageFile = $request->file('image');
             $fileName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $imageFile->getClientOriginalName());
-            $imageFile->move(public_path('uploads/dasarian'), $fileName);
+            $this->saveUploadedFile($imageFile, public_path('uploads/dasarian'), $fileName);
 
             if ($isEdit && $dasarian->image_path) {
                 $oldPath = public_path($dasarian->image_path);
@@ -462,6 +469,7 @@ class DashboardController extends Controller
     {
         $validated = $request->validate([
             'id' => ['nullable', 'integer', 'exists:climate_bulletins,id'],
+            'category' => ['nullable', 'string', 'in:iklim,malaria'],
             'title' => ['required', 'string', 'max:255'],
             'edition' => ['required', 'string', 'max:100'],
             'release_date' => ['nullable', 'date'],
@@ -473,41 +481,48 @@ class DashboardController extends Controller
             'is_published' => ['nullable'],
             'cover_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:5120'],
             'pdf_file' => ['nullable', 'file', 'mimes:pdf', 'max:35840'], // max 35MB
+            'redirect_tab' => ['nullable', 'string'],
         ]);
 
         $bulletin = !empty($validated['id']) ? ClimateBulletin::find($validated['id']) : new ClimateBulletin();
 
+        $bulletin->category = $validated['category'] ?? ($bulletin->category ?: 'iklim');
         $bulletin->title = trim($validated['title']);
         $bulletin->edition = trim($validated['edition']);
         $bulletin->release_date = $validated['release_date'] ?? null;
-        $bulletin->description = $validated['description'] ? trim($validated['description']) : null;
+        $bulletin->description = !empty($validated['description']) ? trim($validated['description']) : null;
         $bulletin->page_count = $validated['page_count'] ?? 24;
-        $bulletin->file_size = $validated['file_size'] ? trim($validated['file_size']) : null;
-        $bulletin->external_link = $validated['external_link'] ? trim($validated['external_link']) : null;
+        $bulletin->file_size = !empty($validated['file_size']) ? trim($validated['file_size']) : null;
+        $bulletin->external_link = !empty($validated['external_link']) ? trim($validated['external_link']) : null;
         $bulletin->order = $validated['order'] ?? 0;
         $bulletin->is_published = $request->boolean('is_published');
 
         if ($request->hasFile('cover_image')) {
             $coverFile = $request->file('cover_image');
             $coverName = 'cover_' . time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $coverFile->getClientOriginalName());
-            $coverFile->move(public_path('uploads/bulletins/covers'), $coverName);
+            $this->saveUploadedFile($coverFile, public_path('uploads/bulletins/covers'), $coverName);
 
-            if ($bulletin->cover_image && file_exists(public_path($bulletin->cover_image)) && !str_contains($bulletin->cover_image, 'default-bulletin-cover')) {
+            if ($bulletin->cover_image && file_exists(public_path($bulletin->cover_image)) && !str_contains($bulletin->cover_image, 'default-')) {
                 @unlink(public_path($bulletin->cover_image));
             }
             $bulletin->cover_image = 'uploads/bulletins/covers/' . $coverName;
         } elseif (!$bulletin->cover_image) {
-            $bulletin->cover_image = 'images/default-bulletin-cover.svg';
+            $bulletin->cover_image = ($bulletin->category === 'malaria')
+                ? 'images/default-malaria-bulletin-cover.svg'
+                : 'images/default-bulletin-cover.svg';
         }
 
         if ($request->hasFile('pdf_file')) {
             $pdfFile = $request->file('pdf_file');
             $pdfName = 'buletin_' . time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $pdfFile->getClientOriginalName());
-            $pdfFile->move(public_path('uploads/bulletins/files'), $pdfName);
+            $this->saveUploadedFile($pdfFile, public_path('uploads/bulletins/files'), $pdfName);
 
             if (empty($bulletin->file_size)) {
-                $bytes = filesize(public_path('uploads/bulletins/files/' . $pdfName));
-                $bulletin->file_size = round($bytes / (1024 * 1024), 1) . ' MB';
+                $filePathOnDisk = public_path('uploads/bulletins/files/' . $pdfName);
+                if (file_exists($filePathOnDisk)) {
+                    $bytes = filesize($filePathOnDisk);
+                    $bulletin->file_size = round($bytes / (1024 * 1024), 1) . ' MB';
+                }
             }
 
             if ($bulletin->file_path && file_exists(public_path($bulletin->file_path))) {
@@ -518,14 +533,17 @@ class DashboardController extends Controller
 
         $bulletin->save();
 
-        return redirect()->route('admin', ['tab' => 'buletin-iklim'])->with('success', 'Data Buletin Iklim (' . $bulletin->edition . ') berhasil disimpan.');
+        $redirectTab = $request->input('redirect_tab') ?: ($bulletin->category === 'malaria' && $request->input('source_tab') === 'siling-malaria' ? 'siling-malaria' : 'buletin-iklim');
+
+        return redirect()->route('admin', ['tab' => $redirectTab])->with('success', 'Data Buletin (' . $bulletin->edition . ') berhasil disimpan.');
     }
 
     public function destroyBulletin(ClimateBulletin $bulletin): RedirectResponse
     {
         $edition = $bulletin->edition;
+        $category = $bulletin->category;
 
-        if ($bulletin->cover_image && file_exists(public_path($bulletin->cover_image)) && !str_contains($bulletin->cover_image, 'default-bulletin-cover')) {
+        if ($bulletin->cover_image && file_exists(public_path($bulletin->cover_image)) && !str_contains($bulletin->cover_image, 'default-')) {
             @unlink(public_path($bulletin->cover_image));
         }
 
@@ -535,7 +553,9 @@ class DashboardController extends Controller
 
         $bulletin->delete();
 
-        return redirect()->route('admin', ['tab' => 'buletin-iklim'])->with('success', 'Buletin ' . $edition . ' berhasil dihapus.');
+        $redirectTab = request()->input('tab') ?: ($category === 'malaria' && request()->has('from_malaria') ? 'siling-malaria' : 'buletin-iklim');
+
+        return redirect()->route('admin', ['tab' => $redirectTab])->with('success', 'Buletin ' . $edition . ' berhasil dihapus.');
     }
 
     private function adminPeriod(): string
@@ -570,5 +590,23 @@ class DashboardController extends Controller
         [$year, $month] = explode('-', $period);
 
         return $monthNames[(int) $month].' '.$year;
+    }
+
+    private function saveUploadedFile(\Illuminate\Http\UploadedFile $file, string $targetDirectory, string $filename): void
+    {
+        if (!is_dir($targetDirectory)) {
+            @mkdir($targetDirectory, 0755, true);
+        }
+
+        $targetPath = rtrim($targetDirectory, '/\\') . DIRECTORY_SEPARATOR . $filename;
+
+        try {
+            $file->move($targetDirectory, $filename);
+        } catch (\Symfony\Component\HttpFoundation\File\Exception\FileException $e) {
+            if (!@copy($file->getPathname(), $targetPath)) {
+                throw $e;
+            }
+            @unlink($file->getPathname());
+        }
     }
 }

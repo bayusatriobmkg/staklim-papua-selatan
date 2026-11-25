@@ -1245,6 +1245,18 @@
             @endif
 
             <div class="field" style="grid-column: 1 / -1;">
+                <label for="bulletin_category">Kategori &amp; Target Publikasi *</label>
+                <select id="bulletin_category" name="category" required style="font-weight:600;">
+                    <option value="iklim" {{ old('category', $editingBulletin->category ?? 'iklim') === 'iklim' ? 'selected' : '' }}>
+                        📰 Buletin Informasi Iklim Umum (Tampil di Dashboard Utama &amp; Katalog Produk)
+                    </option>
+                    <option value="malaria" {{ old('category', $editingBulletin->category ?? '') === 'malaria' ? 'selected' : '' }}>
+                        🦟 Buletin Iklim Lingkungan &amp; Peringatan Dini Malaria (Tampil di Produk SILING Malaria)
+                    </option>
+                </select>
+            </div>
+
+            <div class="field" style="grid-column: 1 / -1;">
                 <label for="bulletin_title">Judul Buletin *</label>
                 <input id="bulletin_title" name="title" type="text" required placeholder="Contoh: Buletin Informasi Iklim Papua Selatan" value="{{ old('title', $editingBulletin->title ?? 'Buletin Informasi Iklim Papua Selatan') }}">
             </div>
@@ -1342,8 +1354,15 @@
                                 <img src="{{ $b->cover_url }}" alt="Cover" style="width:48px; height:64px; object-fit:cover; border-radius:4px; border:1px solid #cbd5e1; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
                             </td>
                             <td>
+                                <div style="display:flex; align-items:center; gap:6px; margin-bottom:3px; flex-wrap:wrap;">
+                                    @if($b->category === 'malaria')
+                                        <span class="badge" style="background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; font-size:10px; font-weight:700;">🦟 SILING Malaria</span>
+                                    @else
+                                        <span class="badge" style="background:#eff6ff; color:#1e40af; border:1px solid #bfdbfe; font-size:10px; font-weight:700;">📰 Iklim Umum</span>
+                                    @endif
+                                    <span style="font-size:11px; font-weight:700; color:var(--bmkg-blue); background:#f1f5f9; padding:2px 8px; border-radius:4px;">{{ $b->edition }}</span>
+                                </div>
                                 <strong style="color:var(--bmkg-navy); font-size:13px; display:block;">{{ $b->title }}</strong>
-                                <span style="display:inline-block; margin-top:2px; font-size:11.5px; font-weight:600; color:var(--bmkg-blue); background:#eff6ff; padding:2px 8px; border-radius:4px;">{{ $b->edition }}</span>
                                 @if($b->description)
                                     <p style="margin:4px 0 0; font-size:11px; color:var(--muted); line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ $b->description }}</p>
                                 @endif
@@ -1423,6 +1442,7 @@
             <a href="#malaria-ai-input">1. Angka insiden</a>
             <a href="#malaria-climate-input">2. Kesesuaian iklim</a>
             <a href="#malaria-trend-input">3. Kasus dan parameter iklim</a>
+            <a href="#malaria-bulletin-section">4. Buletin SILING Malaria</a>
         </nav>
         <div id="malaria-ai-input">
         <h4>1. Angka Insiden Malaria</h4>
@@ -1613,6 +1633,139 @@
                 </tbody>
             </table>
         </div>
+    </section>
+
+    <!-- 5B. PUBLIKASI BULETIN SILING MALARIA -->
+    <section class="card" id="malaria-bulletin-section" style="margin-top:24px;">
+        <div class="card-header-bar">
+            <div>
+                <h3>Publikasi Buletin SILING Malaria</h3>
+                <p class="sub">Kelola edisi buletin iklim lingkungan dan peringatan dini malaria serta unggah dokumen PDF resmi untuk publikasi portal.</p>
+            </div>
+            @if($latestMalariaBulletin && $latestMalariaBulletin->download_url)
+                <a href="{{ $latestMalariaBulletin->download_url }}" target="_blank" rel="noopener" class="btn" style="background:#059669; font-size:12px; height:36px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Buka PDF Aktif
+                </a>
+            @endif
+        </div>
+
+        @if($latestMalariaBulletin)
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:var(--r-md); padding:16px; margin-bottom:20px; display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap;">
+            <img src="{{ $latestMalariaBulletin->cover_url }}" alt="Cover Buletin Malaria" style="width:72px; height:96px; object-fit:cover; border-radius:6px; border:1px solid #86efac; box-shadow:0 2px 6px rgba(0,0,0,0.1); flex-shrink:0;">
+            <div style="flex:1; min-width:240px;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px; flex-wrap:wrap;">
+                    <span class="badge" style="background:#dcfce7; color:#15803d; border:1px solid #86efac; font-size:10.5px; font-weight:700;">
+                        {{ $latestMalariaBulletin->is_published ? '✓ Terbit di SILING Malaria' : 'Draf' }}
+                    </span>
+                    <span style="font-size:11.5px; font-weight:700; color:#065f46; background:#e0f2fe; padding:2px 8px; border-radius:4px;">
+                        {{ $latestMalariaBulletin->edition }}
+                    </span>
+                    <span style="font-size:11.5px; color:#64748b;">
+                        Rilis: {{ $latestMalariaBulletin->formatted_date }} &bull; {{ $latestMalariaBulletin->page_count ?? 32 }} Halaman
+                    </span>
+                </div>
+                <strong style="font-size:14px; color:var(--bmkg-navy); display:block; margin-bottom:4px;">{{ $latestMalariaBulletin->title }}</strong>
+                <p style="font-size:12px; color:#475569; margin:0 0 8px; line-height:1.4;">{{ $latestMalariaBulletin->description }}</p>
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                    @if($latestMalariaBulletin->download_url)
+                        <a href="{{ $latestMalariaBulletin->download_url }}" target="_blank" rel="noopener" style="font-size:12px; font-weight:700; color:#059669; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Download PDF ({{ $latestMalariaBulletin->file_size ?: 'Dokumen PDF' }})
+                        </a>
+                    @else
+                        <span style="font-size:12px; color:#dc2626;">File PDF belum diunggah</span>
+                    @endif
+                    <span style="color:#cbd5e1;">&bull;</span>
+                    <a href="{{ route('admin', ['tab' => 'buletin-iklim', 'edit_bulletin' => $latestMalariaBulletin->id]) }}" style="font-size:12px; font-weight:600; color:var(--bmkg-blue); text-decoration:none;">
+                        Buka di Formulir Lengkap &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        <h4>Formulir Unggah Dokumen PDF &amp; Pembaruan Buletin SILING Malaria</h4>
+        <p class="sub" style="margin-bottom:14px;">Gunakan formulir di bawah ini untuk mengunggah file PDF dan memperbarui data publikasi buletin malaria.</p>
+
+        <form method="post" novalidate action="{{ route('bulletin.store', [], false) }}" enctype="multipart/form-data" class="form" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; align-items:start;">
+            @csrf
+            <input type="hidden" name="category" value="malaria">
+            <input type="hidden" name="source_tab" value="siling-malaria">
+            @if($latestMalariaBulletin)
+                <input type="hidden" name="id" value="{{ $latestMalariaBulletin->id }}">
+            @endif
+
+            <div class="field" style="grid-column: 1 / -1;">
+                <label for="malaria_bulletin_title">Judul Buletin *</label>
+                <input id="malaria_bulletin_title" name="title" type="text" required placeholder="Judul Buletin" value="{{ old('title', $latestMalariaBulletin->title ?? 'Buletin Iklim Lingkungan dan Peringatan Dini Malaria Provinsi Papua Selatan') }}">
+            </div>
+
+            <div class="field">
+                <label for="malaria_bulletin_edition">Edisi &amp; Periode *</label>
+                <input id="malaria_bulletin_edition" name="edition" type="text" required placeholder="Contoh: Edisi November 2026" value="{{ old('edition', $latestMalariaBulletin->edition ?? 'Edisi November 2026') }}">
+            </div>
+
+            <div class="field">
+                <label for="malaria_bulletin_release_date">Tanggal Terbit</label>
+                <input id="malaria_bulletin_release_date" name="release_date" type="date" value="{{ old('release_date', $latestMalariaBulletin && $latestMalariaBulletin->release_date ? $latestMalariaBulletin->release_date->format('Y-m-d') : date('Y-m-d')) }}">
+            </div>
+
+            <div class="field">
+                <label for="malaria_bulletin_page_count">Jumlah Halaman</label>
+                <input id="malaria_bulletin_page_count" name="page_count" type="number" min="1" max="999" value="{{ old('page_count', $latestMalariaBulletin->page_count ?? 32) }}">
+            </div>
+
+            <div class="field">
+                <label for="malaria_bulletin_file_size">Estimasi Ukuran File (opsional)</label>
+                <input id="malaria_bulletin_file_size" name="file_size" type="text" placeholder="Dihitung otomatis saat upload PDF" value="{{ old('file_size', $latestMalariaBulletin->file_size ?? '') }}">
+            </div>
+
+            <div class="field" style="background:#f0fdf4; border:1px dashed #86efac; border-radius:var(--r-md); padding:10px;">
+                <label for="malaria_bulletin_pdf_file" style="color:#065f46; font-weight:700;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline; vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Unggah Dokumen PDF Buletin (Maks 35 MB) *
+                </label>
+                <input id="malaria_bulletin_pdf_file" name="pdf_file" type="file" accept=".pdf,application/pdf" style="margin-top:4px;">
+                @if($latestMalariaBulletin && $latestMalariaBulletin->file_path)
+                    <small style="color:#059669; font-size:11px; margin-top:4px; display:block; font-weight:600;">
+                        ✓ File PDF tersimpan: <a href="{{ asset($latestMalariaBulletin->file_path) }}" target="_blank">Unduh / Periksa Dokumen</a>
+                    </small>
+                @endif
+            </div>
+
+            <div class="field">
+                <label for="malaria_bulletin_cover_image">Unggah Sampul (opsional, JPG/PNG/SVG)</label>
+                <input id="malaria_bulletin_cover_image" name="cover_image" type="file" accept="image/*">
+                @if($latestMalariaBulletin && $latestMalariaBulletin->cover_image)
+                    <small style="color:var(--muted); font-size:11px; margin-top:3px; display:block;">Sampul saat ini: <a href="{{ $latestMalariaBulletin->cover_url }}" target="_blank">Lihat</a></small>
+                @endif
+            </div>
+
+            <div class="field" style="grid-column: 1 / -1;">
+                <label for="malaria_bulletin_external_link">Tautan Cadangan / Google Drive / Repository (opsional)</label>
+                <input id="malaria_bulletin_external_link" name="external_link" type="url" placeholder="https://..." value="{{ old('external_link', $latestMalariaBulletin->external_link ?? '') }}">
+            </div>
+
+            <div class="field" style="grid-column: 1 / -1;">
+                <label for="malaria_bulletin_description">Ringkasan Eksekutif &amp; Sorotan Analisis SILING Malaria</label>
+                <textarea id="malaria_bulletin_description" name="description" rows="3" placeholder="Uraian analisis korelasi suhu, kelembapan, curah hujan terhadap vektor malaria...">{{ old('description', $latestMalariaBulletin->description ?? '') }}</textarea>
+            </div>
+
+            <div class="field" style="grid-column: 1 / -1; display:flex; align-items:center; gap:8px;">
+                <input type="checkbox" id="malaria_bulletin_is_published" name="is_published" value="1" style="width:18px; height:18px;" @checked(old('is_published', $latestMalariaBulletin ? $latestMalariaBulletin->is_published : true))>
+                <label for="malaria_bulletin_is_published" style="font-weight:700; margin:0; cursor:pointer;">
+                    Publikasikan Buletin (Tampilkan di Halaman Produk SILING Malaria)
+                </label>
+            </div>
+
+            <div style="grid-column: 1 / -1; display:flex; gap:10px; margin-top:6px;">
+                <button class="btn" type="submit" style="background:#059669; color:#fff; display:inline-flex; align-items:center; gap:6px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Simpan &amp; Unggah Buletin SILING Malaria
+                </button>
+            </div>
+        </form>
     </section>
 
     {{-- MODUL 6: TEMPLATE & BROADCAST WHATSAPP NAKES --}}

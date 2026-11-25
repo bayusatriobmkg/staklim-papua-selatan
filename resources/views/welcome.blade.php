@@ -4450,6 +4450,123 @@
             <div class="trend-legend" aria-label="Legenda kabupaten"><span class="trend-key"><i style="background:#087e79"></i>Asmat</span><span class="trend-key"><i style="background:#3974c6"></i>Boven Digoel</span><span class="trend-key"><i style="background:#e2a21b"></i>Mappi</span><span class="trend-key"><i style="background:#c94f48"></i>Merauke</span></div>
             <p class="trend-note">Pilih indikator untuk melihat grafik tren data malaria dan parameter iklim bulanan.</p>
         </section>
+
+        <!-- Publikasi Buletin Iklim Lingkungan & Peringatan Dini Malaria -->
+        @if(!empty($latestMalariaBulletin))
+        <section class="bulletin-section" id="buletin-siling-malaria" style="margin-top:36px;">
+            <div class="section-intro" style="margin-bottom: 20px;">
+                <div class="eyebrow">Publikasi Khusus Iklim &amp; Kesehatan</div>
+                <h2>Buletin Iklim Lingkungan &amp; Peringatan Dini Malaria</h2>
+                <p>Akses publikasi resmi analisis korelasi faktor dinamika atmosfer dan transmisi malaria, pemodelan spasial kesesuaian iklim perkembangbiakan vektor, serta rekomendasi pencegahan operasional di Provinsi Papua Selatan.</p>
+            </div>
+
+            <div class="bulletin-card-main">
+                <div class="bulletin-hero-grid">
+                    <!-- Cover Column with 3D Effect -->
+                    <div class="bulletin-cover-col">
+                        <a href="{{ $latestMalariaBulletin->download_url ?: '#' }}" target="_blank" rel="noopener" class="bulletin-3d-book" title="Buka Dokumen Buletin SILING Malaria (PDF)">
+                            <img src="{{ $latestMalariaBulletin->cover_url }}" alt="Sampul {{ $latestMalariaBulletin->title }}" loading="lazy">
+                            <div class="bulletin-book-spine"></div>
+                            <span class="bulletin-badge-floating" style="background:#059669;">Edisi Baru</span>
+                        </a>
+                    </div>
+
+                    <!-- Info and Highlights Column -->
+                    <div class="bulletin-info-col">
+                        <div class="bulletin-tags-row">
+                            <span class="bulletin-tag-edition" style="background:#ecfdf5; color:#065f46; border-color:#a7f3d0;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                                {{ $latestMalariaBulletin->edition }}
+                            </span>
+                            @if($latestMalariaBulletin->release_date)
+                            <span class="bulletin-tag-meta">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                {{ $latestMalariaBulletin->formatted_date }}
+                            </span>
+                            @endif
+                            <span class="bulletin-tag-meta">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                {{ $latestMalariaBulletin->page_count ?? 32 }} Halaman
+                            </span>
+                            @if($latestMalariaBulletin->file_size)
+                            <span class="bulletin-tag-meta">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                {{ $latestMalariaBulletin->file_size }}
+                            </span>
+                            @endif
+                        </div>
+
+                        <h3 class="bulletin-headline">{{ $latestMalariaBulletin->title }}</h3>
+
+                        <p class="bulletin-summary">
+                            {{ $latestMalariaBulletin->description ?: 'Publikasi resmi hasil integrasi data klimatologi dan kesehatan kerja sama Stasiun Klimatologi Papua Selatan dengan Dinas Kesehatan. Menyajikan analisis korelasi parameter atmosfer dengan tren angka insiden malaria di Kabupaten Asmat, Boven Digoel, Mappi, dan Merauke.' }}
+                        </p>
+
+                        <div class="bulletin-highlights-grid">
+                            <div class="bulletin-highlight-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Korelasi Suhu, Kelembapan &amp; Curah Hujan</span>
+                            </div>
+                            <div class="bulletin-highlight-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Peta Kesesuaian Iklim Vektor Anopheles</span>
+                            </div>
+                            <div class="bulletin-highlight-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Prediksi Angka Insiden (AI) 4 Kabupaten</span>
+                            </div>
+                            <div class="bulletin-highlight-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Peringatan Dini &amp; Rekomendasi Tindak Lanjut</span>
+                            </div>
+                        </div>
+
+                        <div class="bulletin-actions-row">
+                            @if($latestMalariaBulletin->download_url)
+                            <a href="{{ $latestMalariaBulletin->download_url }}" target="_blank" rel="noopener" class="btn-bulletin-primary" style="background:linear-gradient(135deg, #059669, #0284c7);">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                <span>Unduh Buletin Malaria (PDF)</span>
+                            </a>
+                            <a href="{{ $latestMalariaBulletin->download_url }}" target="_blank" rel="noopener" class="btn-bulletin-secondary">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <span>Baca Buletin Online</span>
+                            </a>
+                            @else
+                            <a href="{{ route('contact') }}" class="btn-bulletin-primary" style="background:#059669;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                <span>Permohonan Dokumen Buletin</span>
+                            </a>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                @if(isset($malariaBulletins) && $malariaBulletins->count() > 1)
+                <div class="bulletin-archive-box">
+                    <div class="bulletin-archive-header">
+                        <span class="bulletin-archive-title">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                            Arsip Buletin SILING Malaria Sebelumnya
+                        </span>
+                        <span style="font-size:12px; color:var(--muted); font-weight:600;">Total {{ $malariaBulletins->count() }} Edisi</span>
+                    </div>
+                    <div class="bulletin-archive-grid">
+                        @foreach($malariaBulletins->slice(1) as $archived)
+                        <a href="{{ $archived->download_url ?: '#' }}" target="_blank" rel="noopener" class="bulletin-archive-card" title="Buka {{ $archived->title }} - {{ $archived->edition }}">
+                            <img src="{{ $archived->cover_url }}" alt="Cover {{ $archived->edition }}" class="bulletin-archive-thumb" loading="lazy">
+                            <div class="bulletin-archive-info">
+                                <span class="bulletin-archive-badge">{{ $archived->edition }}</span>
+                                <span class="bulletin-archive-name">{{ $archived->title }}</span>
+                                <span class="bulletin-archive-date">{{ $archived->formatted_date }} &bull; {{ $archived->page_count ?? 32 }} Hlm</span>
+                            </div>
+                        </a>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+            </div>
+        </section>
+        @endif
     </div>
     @endif
 </section>

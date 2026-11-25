@@ -12,6 +12,7 @@ class ClimateBulletin extends Model
 
     protected $fillable = [
         'title',
+        'category',
         'edition',
         'release_date',
         'description',
