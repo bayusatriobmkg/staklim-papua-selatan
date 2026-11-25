@@ -39,6 +39,10 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('climate_bulletins', 'category')) {
+            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        }
+
         \App\Models\ClimateBulletin::updateOrCreate(
             ['edition' => 'Edisi November 2026', 'category' => 'iklim'],
             [
