@@ -506,10 +506,6 @@ class DashboardController extends Controller
                 @unlink(public_path($bulletin->cover_image));
             }
             $bulletin->cover_image = 'uploads/bulletins/covers/' . $coverName;
-        } elseif (!$bulletin->cover_image) {
-            $bulletin->cover_image = ($bulletin->category === 'malaria')
-                ? 'images/default-malaria-bulletin-cover.svg'
-                : 'images/default-bulletin-cover.svg';
         }
 
         if ($request->hasFile('pdf_file')) {
@@ -517,18 +513,35 @@ class DashboardController extends Controller
             $pdfName = 'buletin_' . time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $pdfFile->getClientOriginalName());
             $this->saveUploadedFile($pdfFile, public_path('uploads/bulletins/files'), $pdfName);
 
-            if (empty($bulletin->file_size)) {
-                $filePathOnDisk = public_path('uploads/bulletins/files/' . $pdfName);
-                if (file_exists($filePathOnDisk)) {
-                    $bytes = filesize($filePathOnDisk);
-                    $bulletin->file_size = round($bytes / (1024 * 1024), 1) . ' MB';
+            $uploadedPdfFullPath = public_path('uploads/bulletins/files/' . $pdfName);
+
+            if (empty($bulletin->file_size) && file_exists($uploadedPdfFullPath)) {
+                $bytes = filesize($uploadedPdfFullPath);
+                $bulletin->file_size = round($bytes / (1024 * 1024), 1) . ' MB';
+            }
+
+            // Jika user tidak mengunggah sampul gambar secara manual, ekstrak otomatis sampul halaman dari file PDF
+            if (!$request->hasFile('cover_image')) {
+                $extractedCoverName = 'cover_' . time() . '_' . pathinfo($pdfName, PATHINFO_FILENAME) . '.jpg';
+                $extractedCoverPath = public_path('uploads/bulletins/covers/' . $extractedCoverName);
+                if ($this->extractPdfCoverImage($uploadedPdfFullPath, $extractedCoverPath)) {
+                    if ($bulletin->cover_image && file_exists(public_path($bulletin->cover_image)) && !str_contains($bulletin->cover_image, 'default-')) {
+                        @unlink(public_path($bulletin->cover_image));
+                    }
+                    $bulletin->cover_image = 'uploads/bulletins/covers/' . $extractedCoverName;
                 }
             }
 
-            if ($bulletin->file_path && file_exists(public_path($bulletin->file_path))) {
+            if ($bulletin->file_path && file_exists(public_path($bulletin->file_path)) && $bulletin->file_path !== ('uploads/bulletins/files/' . $pdfName)) {
                 @unlink(public_path($bulletin->file_path));
             }
             $bulletin->file_path = 'uploads/bulletins/files/' . $pdfName;
+        }
+
+        if (!$bulletin->cover_image) {
+            $bulletin->cover_image = ($bulletin->category === 'malaria')
+                ? 'images/default-malaria-bulletin-cover.svg'
+                : 'images/default-bulletin-cover.svg';
         }
 
         $bulletin->save();
@@ -608,5 +621,52 @@ class DashboardController extends Controller
             }
             @unlink($file->getPathname());
         }
+    }
+
+    private function extractPdfCoverImage(string $pdfPath, string $outputPath): bool
+    {
+        if (!file_exists($pdfPath)) {
+            return false;
+        }
+
+        $content = @file_get_contents($pdfPath);
+        if (!$content) {
+            return false;
+        }
+
+        $coversDir = dirname($outputPath);
+        if (!is_dir($coversDir)) {
+            @mkdir($coversDir, 0755, true);
+        }
+
+        $offset = 0;
+        while (($pos = strpos($content, "stream", $offset)) !== false) {
+            $start = strpos($content, "\n", $pos);
+            if ($start === false) {
+                $offset = $pos + 6;
+                continue;
+            }
+            $start += 1;
+
+            $end = strpos($content, "endstream", $start);
+            if ($end === false) {
+                $offset = $pos + 6;
+                continue;
+            }
+
+            $stream = substr($content, $start, $end - $start);
+            $stream = ltrim($stream, "\r\n");
+
+            if (str_starts_with($stream, "\xFF\xD8\xFF")) {
+                $jpegData = rtrim($stream, "\r\n");
+                if (strlen($jpegData) > 20000) {
+                    return (bool) @file_put_contents($outputPath, $jpegData);
+                }
+            }
+
+            $offset = $end + 9;
+        }
+
+        return false;
     }
 }
