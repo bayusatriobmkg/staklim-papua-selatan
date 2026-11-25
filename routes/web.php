@@ -14,17 +14,17 @@ Route::get('/produk/siling-malaria', [DashboardController::class, 'silingMalaria
 Route::get('/layanan-produk', fn() => redirect()->route('products'));
 Route::get('/kontak', [DashboardController::class, 'contact'])->name('contact');
 
-// Autentikasi Pengelola / Admin
+// Autentikasi Pengelola / Admin (Path Khusus Terproteksi)
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
+    Route::get('/adm-staklim-papsel/masuk', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/adm-staklim-papsel/masuk', [AuthController::class, 'login'])->middleware('throttle:5,1');
 });
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+Route::post('/adm-staklim-papsel/keluar', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // Panel Pengelola Data (Wajib Login)
 Route::middleware('auth')->group(function () {
-    Route::get('/admin', [DashboardController::class, 'admin'])->name('admin');
+    Route::get('/adm-staklim-papsel', [DashboardController::class, 'admin'])->name('admin');
 
     // Manajemen Operasional & WhatsApp
     Route::post('/insiden', [DashboardController::class, 'store'])->name('incidents.store');
@@ -36,12 +36,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/penerima-whatsapp/{recipient}', [DashboardController::class, 'destroyWhatsappRecipient'])->name('whatsapp-recipients.destroy');
 
     // Ribbon Tabs: Peringatan Dini, HTH, Dasarian, Buletin
-    Route::post('/admin/peringatan-dini', [DashboardController::class, 'storeEarlyWarning'])->name('early-warning.store');
-    Route::delete('/admin/peringatan-dini/{earlyWarning}', [DashboardController::class, 'destroyEarlyWarning'])->name('early-warning.destroy');
-    Route::post('/admin/pos-hth', [DashboardController::class, 'storeHthObservation'])->name('hth-observation.store');
-    Route::delete('/admin/pos-hth/{hthObservation}', [DashboardController::class, 'destroyHthObservation'])->name('hth-observation.destroy');
-    Route::post('/admin/dasarian-gambar', [DashboardController::class, 'storeDasarianImage'])->name('dasarian-image.store');
-    Route::delete('/admin/dasarian-gambar/{dasarianImage}', [DashboardController::class, 'destroyDasarianImage'])->name('dasarian-image.destroy');
-    Route::post('/admin/buletin-iklim', [DashboardController::class, 'storeBulletin'])->name('bulletin.store');
-    Route::delete('/admin/buletin-iklim/{bulletin}', [DashboardController::class, 'destroyBulletin'])->name('bulletin.destroy');
+    Route::post('/adm-staklim-papsel/peringatan-dini', [DashboardController::class, 'storeEarlyWarning'])->name('early-warning.store');
+    Route::delete('/adm-staklim-papsel/peringatan-dini/{earlyWarning}', [DashboardController::class, 'destroyEarlyWarning'])->name('early-warning.destroy');
+    Route::post('/adm-staklim-papsel/pos-hth', [DashboardController::class, 'storeHthObservation'])->name('hth-observation.store');
+    Route::delete('/adm-staklim-papsel/pos-hth/{hthObservation}', [DashboardController::class, 'destroyHthObservation'])->name('hth-observation.destroy');
+    Route::post('/adm-staklim-papsel/dasarian-gambar', [DashboardController::class, 'storeDasarianImage'])->name('dasarian-image.store');
+    Route::delete('/adm-staklim-papsel/dasarian-gambar/{dasarianImage}', [DashboardController::class, 'destroyDasarianImage'])->name('dasarian-image.destroy');
+    Route::post('/adm-staklim-papsel/buletin-iklim', [DashboardController::class, 'storeBulletin'])->name('bulletin.store');
+    Route::delete('/adm-staklim-papsel/buletin-iklim/{bulletin}', [DashboardController::class, 'destroyBulletin'])->name('bulletin.destroy');
 });

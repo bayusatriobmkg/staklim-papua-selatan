@@ -20,8 +20,8 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (TokenMismatchException $e, Request $request) {
-            if ($request->is('login') || $request->routeIs('login')) {
-                return redirect('/login?error=csrf');
+            if ($request->is('login') || $request->routeIs('login') || $request->is('adm-staklim-papsel/masuk')) {
+                return redirect()->route('login');
             }
         });
     })->create();

@@ -372,7 +372,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="/login" autocomplete="on">
+            <form method="POST" action="{{ route('login') }}" autocomplete="on">
                 @csrf
 
                 <div class="form-group">

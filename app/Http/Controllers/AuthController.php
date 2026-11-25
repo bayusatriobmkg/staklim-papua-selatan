@@ -32,7 +32,7 @@ class AuthController extends Controller
     public function showLoginForm(Request $request): View|RedirectResponse
     {
         if (Auth::check()) {
-            return redirect('/admin');
+            return redirect()->route('admin');
         }
 
         $errorKey = (string) $request->query('error', '');
@@ -86,7 +86,7 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect('/admin');
+        return redirect()->route('admin');
     }
 
     public function logout(Request $request): RedirectResponse
@@ -95,6 +95,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()->route('login');
     }
 }
