@@ -313,9 +313,10 @@
         .nav-dropdown-menu {
             position: absolute;
             top: 100%;
-            left: 0;
+            right: 0;
+            left: auto;
             width: 375px;
-            min-width: 375px;
+            max-width: calc(100vw - 32px);
             background: #ffffff;
             border-radius: 12px;
             border: 1px solid rgba(0, 43, 73, 0.10);
