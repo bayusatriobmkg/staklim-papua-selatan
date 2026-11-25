@@ -6,6 +6,19 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Panel Pengelola Data | Stasiun Klimatologi Papua Selatan - BMKG</title>
 
+    <!-- Anti-Clickjacking Frame-Busting Protection (RFC 7034 & CSP) -->
+    <style id="antiClickjack">body{display:none !important;}</style>
+    <script>
+        if (self === top) {
+            var antiClickjack = document.getElementById("antiClickjack");
+            if (antiClickjack && antiClickjack.parentNode) {
+                antiClickjack.parentNode.removeChild(antiClickjack);
+            }
+        } else {
+            top.location = self.location;
+        }
+    </script>
+
     <!-- Google Fonts: Plus Jakarta Sans (Standar Tampilan Publik & Institusional BMKG) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

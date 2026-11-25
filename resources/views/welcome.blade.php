@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ ['dashboard' => 'Dashboard Iklim', 'profile' => 'Profil Stasiun', 'services' => 'Layanan Publik & PTSP', 'products' => (($subPage ?? 'katalog') === 'siling-malaria' ? 'SILING Malaria - Peringatan Dini Berbasis Iklim' : 'Katalog Produk Informasi Iklim'), 'contact' => 'Kontak Kami'][$page] ?? 'Stasiun Klimatologi Papua Selatan' }} | Staklim Papua Selatan - BMKG</title>
+
+    <!-- Anti-Clickjacking Frame-Busting Protection (RFC 7034 & CSP) -->
+    <style id="antiClickjack">body{display:none !important;}</style>
+    <script>
+        if (self === top) {
+            var antiClickjack = document.getElementById("antiClickjack");
+            if (antiClickjack && antiClickjack.parentNode) {
+                antiClickjack.parentNode.removeChild(antiClickjack);
+            }
+        } else {
+            top.location = self.location;
+        }
+    </script>
     
     <!-- Google Fonts: Plus Jakarta Sans (Gaya Khas Publik & Instansi Modern BMKG) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

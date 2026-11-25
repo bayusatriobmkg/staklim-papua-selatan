@@ -1,9 +1,27 @@
+<IfModule mod_headers.c>
+    # 1. HTTP Strict Transport Security (HSTS - RFC 6797)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+    # 2. Clickjacking Protection (RFC 7034 & CSP Level 2/3)
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Content-Security-Policy "frame-ancestors 'self';"
+
+    # 3. MIME Sniffing & XSS Protection
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
 
     RewriteEngine On
+
+    # Block Common CGI Scripts & Vulnerability Scanner Probing
+    RewriteRule ^(cgi-bin|\.cgi|\.pl|\.sh|\.bat|\.py|\.env) - [F,L,NC]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .

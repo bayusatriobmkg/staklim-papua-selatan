@@ -36,38 +36,52 @@ class AuthController extends Controller
         }
 
         $errorKey = (string) $request->query('error', '');
-        $highlightPassword = $errorKey === 'password';
+        if (! in_array($errorKey, ['password', 'akun', 'session', 'csrf'], true)) {
+            $errorKey = '';
+        }
+
+        $loginAlert = session('loginAlert') ?? (self::ALERTS[$errorKey] ?? null);
+
+        $emailValue = old('email', 'staklim.merauke@bmkg.go.id');
+        $emailValue = htmlspecialchars((string) $emailValue, ENT_QUOTES, 'UTF-8');
+
+        $hasError = ! empty($loginAlert) || in_array($errorKey, ['password', 'akun'], true);
 
         return view('auth.login', [
-            'loginAlert' => self::ALERTS[$errorKey] ?? null,
-            'emailValue' => old('email', $request->query('email', 'staklim.merauke@bmkg.go.id')),
-            'emailClass' => 'form-input'.(in_array($errorKey, ['password', 'akun'], true) ? ' is-invalid' : ''),
-            'passwordClass' => 'form-input'.($highlightPassword ? ' is-invalid' : ''),
-            'emailAutofocus' => ! $highlightPassword,
-            'passwordAutofocus' => $highlightPassword,
+            'loginAlert' => $loginAlert,
+            'emailValue' => $emailValue,
+            'emailClass' => 'form-input'.($hasError ? ' is-invalid' : ''),
+            'passwordClass' => 'form-input'.($hasError ? ' is-invalid' : ''),
+            'emailAutofocus' => empty($emailValue),
+            'passwordAutofocus' => ! empty($emailValue),
         ]);
     }
 
     public function login(Request $request): RedirectResponse
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string'],
+        $validated = $request->validate([
+            'email' => ['required', 'string', 'email:rfc,filter', 'max:150'],
+            'password' => ['required', 'string', 'max:255'],
         ], [
             'email.required' => 'Alamat email wajib diisi.',
-            'email.email' => 'Format email tidak valid.',
+            'email.email' => 'Format email tidak valid sesuai standar RFC.',
+            'email.max' => 'Panjang karakter email melebihi batas yang diizinkan.',
             'password.required' => 'Kata sandi wajib diisi.',
         ]);
 
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
-            $error = User::where('email', $credentials['email'])->exists()
-                ? 'password'
-                : 'akun';
+        $cleanEmail = filter_var(strtolower(trim($validated['email'])), FILTER_SANITIZE_EMAIL);
+        $credentials = [
+            'email' => $cleanEmail,
+            'password' => (string) $validated['password'],
+        ];
 
-            return redirect('/login?'.http_build_query([
-                'error' => $error,
-                'email' => $credentials['email'],
-            ]));
+        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+            return back()
+                ->withInput(['email' => $cleanEmail])
+                ->with('loginAlert', [
+                    'title' => 'Autentikasi gagal',
+                    'text' => 'Email atau kata sandi yang Anda masukkan tidak sesuai.',
+                ]);
         }
 
         $request->session()->regenerate();
