@@ -314,12 +314,14 @@
             position: absolute;
             top: 100%;
             left: 0;
-            min-width: 310px;
+            width: 375px;
+            min-width: 375px;
             background: #ffffff;
             border-radius: 12px;
             border: 1px solid rgba(0, 43, 73, 0.10);
             box-shadow: 0 16px 36px -4px rgba(0, 43, 73, 0.18), 0 4px 12px rgba(0, 0, 0, 0.04);
             padding: 8px;
+            box-sizing: border-box;
             visibility: hidden;
             opacity: 0;
             transform: translateY(8px);
@@ -402,6 +404,7 @@
             font-weight: 700;
             color: var(--bmkg-navy);
             line-height: 1.3;
+            white-space: nowrap;
         }
         .nav-dropdown-menu .dropdown-menu-item:hover .dropdown-menu-title {
             color: var(--bmkg-blue);
@@ -410,7 +413,8 @@
             font-size: 11px;
             color: #64748b;
             font-weight: 500;
-            line-height: 1.35;
+            line-height: 1.4;
+            white-space: normal;
         }
         .nav-dropdown-menu .dropdown-menu-badge {
             font-size: 9.5px;
@@ -422,6 +426,9 @@
             background: #fee2e2;
             color: #b91c1c;
             border: 1px solid #fecaca;
+            white-space: nowrap;
+            flex-shrink: 0;
+            display: inline-block;
         }
         .nav-dropdown-menu .dropdown-menu-divider {
             height: 1px;
@@ -3368,7 +3375,7 @@
                             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
                         </div>
                         <div class="dropdown-menu-text">
-                            <div style="display:flex;align-items:center;gap:6px;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:nowrap;width:100%;">
                                 <span class="dropdown-menu-title">SILING Malaria</span>
                                 <span class="dropdown-menu-badge">Peringatan Dini</span>
                             </div>
